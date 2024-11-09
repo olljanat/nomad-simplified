@@ -1,0 +1,65 @@
+# Simulate three Docker hosts by running docker in docker
+services:
+  nomad1:
+    container_name: nomad1
+    image: docker:26.1.4
+    privileged: true
+    networks:
+      test:
+        ipv4_address: 10.10.10.11
+    working_dir: /source
+    volumes:
+      - /home/rancher/code/nomad-simplified:/source
+    environment:
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
+      VAULT_AZUREKEYVAULT_VAULT_NAME: ${VAULT_AZUREKEYVAULT_VAULT_NAME}
+      VAULT_AZUREKEYVAULT_KEY_NAME: ${VAULT_AZUREKEYVAULT_KEY_NAME}
+
+  nomad2:
+    container_name: nomad2
+    image: docker:26.1.4
+    privileged: true
+    networks:
+      test:
+        ipv4_address: 10.10.10.12
+    working_dir: /source
+    volumes:
+      - /home/rancher/code/nomad-simplified:/source
+    environment:
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
+      VAULT_AZUREKEYVAULT_VAULT_NAME: ${VAULT_AZUREKEYVAULT_VAULT_NAME}
+      VAULT_AZUREKEYVAULT_KEY_NAME: ${VAULT_AZUREKEYVAULT_KEY_NAME}
+
+  nomad3:
+    container_name: nomad3
+    image: docker:26.1.4
+    privileged: true
+    networks:
+      test:
+        ipv4_address: 10.10.10.13
+    working_dir: /source
+    volumes:
+      - /home/rancher/code/nomad-simplified:/source
+    environment:
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
+      VAULT_AZUREKEYVAULT_VAULT_NAME: ${VAULT_AZUREKEYVAULT_VAULT_NAME}
+      VAULT_AZUREKEYVAULT_KEY_NAME: ${VAULT_AZUREKEYVAULT_KEY_NAME}
+
+  # Mimics Azure Managed Identity service
+  azure-identity:
+    container_name: azure-identity
+    image: burmilla/os-azureidentity:v1
+    network_mode: host
+    environment:
+      AZIDENTITY_TENANTID: ${AZURE_TENANT_ID}
+      AZIDENTITY_CLIENTID: ${AZURE_CLIENT_ID}
+      AZIDENTITY_SECRET: ${AZURE_CLIENT_SECRET}
+
+networks:
+  test:
+    driver: bridge
+    name: test
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24
+          gateway: 10.10.10.1

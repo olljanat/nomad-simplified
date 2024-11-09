@@ -1,0 +1,18 @@
+services:
+  vault:
+    image: hashicorp/vault:1.18.1
+    container_name: vault-init
+    entrypoint: sh -c 'mkdir /opt/vault/data && vault server -config=/etc/vault.d/vault.hcl'
+    volumes:
+      - ./vault/init-config:/etc/vault.d
+      - ./vault:/opt/vault
+    privileged: true
+    network_mode: host
+    environment:
+      VAULT_RAFT_NODE_ID: node1
+      VAULT_API_ADDR: https://node1:8200
+      VAULT_CLUSTER_ADDR: https://node1:8201
+      VAULT_ADDR: unix:///run/vault.sock
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
+      VAULT_AZUREKEYVAULT_VAULT_NAME: ${VAULT_AZUREKEYVAULT_VAULT_NAME}
+      VAULT_AZUREKEYVAULT_KEY_NAME: ${VAULT_AZUREKEYVAULT_KEY_NAME}

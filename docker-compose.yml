@@ -1,0 +1,41 @@
+services:
+  consul-template:
+    image: hashicorp/consul-template:0.39.1
+    container_name: consul-template
+    command: -config /etc/consul-template/etc.d
+    privileged: true
+    network_mode: host
+    volumes:
+      - ./consul-template/config:/etc/consul-template/etc.d
+      - ./consul/data:/opt/consul
+      - ./nomad/data:/etc/nomad.d
+      - ./vault/data:/opt/vault
+  consul:
+    image: hashicorp/consul:1.19.2
+    container_name: consul
+    # command: /usr/bin/consul agent -server -config-dir=/etc/consul.d
+    # command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect 1 -config-file=/consul/config/config.json
+    command: agent -server -config-dir=/etc/consul.d
+    privileged: true
+    network_mode: host
+    volumes:
+      - ./consul/config:/etc/consul.d
+      - ./consul/data:/opt/consul
+
+  # vault:
+  #   image: hashicorp/vault:1.17.6
+  #   ports:
+  #     - 8200:8200
+  #   volumes:
+  #     - ./vault/config:/vault/config
+  #     - ./vault/policies:/vault/policies
+  #     - ./vault/data:/vault/data
+  #     - ./vault/logs:/vault/logs
+  #   environment:
+  #     - VAULT_ADDR=http://127.0.0.1:8200
+  #     - VAULT_API_ADDR=http://127.0.0.1:8200
+  #   command: server -config=/vault/config/vault-config.json
+  #   cap_add:
+  #     - IPC_LOCK
+  #   depends_on:
+  #     - consul

@@ -3,3 +3,4 @@ nomad/data/
 vault/init-config/vault-init.crt
 vault/init-config/vault-init.key
 vault/data/
+vault/secrets/

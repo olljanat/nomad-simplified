@@ -19,3 +19,11 @@ az ad sp create-for-rbac -n nomad-simplified --years 30
   "password": "LCj8Q~hnnqa.utk5ypOpe_Jdxgr0C_Z3HuDQHaB3",
   "tenant": "d9007062-1aae-4619-abb0-320699664975"
 }
+
+# Vault init
+Init certificate
+```bash
+openssl req -x509 -newkey rsa:4096 -sha256 -days 1 \
+  -nodes -keyout vault/init-config/vault-init.key -out vault/init-config/vault-init.crt -subj "/CN=localhost" \
+  -addext "subjectAltName=DNS:localhost,IP:127.0.0.1"
+```

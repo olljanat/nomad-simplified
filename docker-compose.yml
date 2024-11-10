@@ -1,29 +1,30 @@
 services:
   consul-template:
-    image: hashicorp/consul-template:0.39.1
+    image: hashicorp/consul-template:${CONSUL_TEMPLATE_VERSION}
     container_name: consul-template
     command: -config /etc/consul-template/etc.d
     privileged: true
     network_mode: host
+    environment:
+      VAULT_TOKEN: ${VAULT_TOKEN}
     volumes:
       - ./consul-template/config:/etc/consul-template/etc.d
       - ./consul/data:/opt/consul
       - ./nomad/data:/etc/nomad.d
       - ./vault/data:/opt/vault
-  consul:
-    image: hashicorp/consul:1.19.2
-    container_name: consul
-    # command: /usr/bin/consul agent -server -config-dir=/etc/consul.d
-    # command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect 1 -config-file=/consul/config/config.json
-    command: agent -server -config-dir=/etc/consul.d
-    privileged: true
-    network_mode: host
-    volumes:
-      - ./consul/config:/etc/consul.d
-      - ./consul/data:/opt/consul
+
+  # consul:
+  #   image: hashicorp/consul:${CONSUL_VERSION}
+  #   container_name: consul
+  #   command: agent -server -config-dir=/etc/consul.d
+  #   privileged: true
+  #   network_mode: host
+  #   volumes:
+  #     - ./consul/config:/etc/consul.d
+  #     - ./consul/data:/opt/consul
 
   # vault:
-  #   image: hashicorp/vault:1.17.6
+  #   image: hashicorp/vault:${VAULT_VERSION}
   #   container_name: vault1
   #   ports:
   #     - 8200:8200

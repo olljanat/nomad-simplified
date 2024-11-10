@@ -1,49 +1,40 @@
 # Simulate three Docker hosts by running docker in docker
+x-service-docker: &service-docker
+  image: docker:26.1.4
+  privileged: true
+  environment:
+    AZURE_TENANT_ID: ${AZURE_TENANT_ID}
+    VAULT_AZUREKEYVAULT_VAULT_NAME: ${VAULT_AZUREKEYVAULT_VAULT_NAME}
+    VAULT_AZUREKEYVAULT_KEY_NAME: ${VAULT_AZUREKEYVAULT_KEY_NAME}
+    CONSUL_TEMPLATE_VERSION: ${CONSUL_TEMPLATE_VERSION}
+    CONSUL_VERSION: ${CONSUL_VERSION}
+    NOMAD_VERSION: ${NOMAD_VERSION}
+    VAULT_VERSION: ${VAULT_VERSION}
+  volumes:
+    - /home/rancher/code/nomad-simplified:/source
+  working_dir: /source
+
 services:
-  nomad1:
-    container_name: nomad1
-    image: docker:26.1.4
-    privileged: true
+  node1:
+    <<: *service-docker
+    container_name: node1
     networks:
       test:
         ipv4_address: 10.10.10.11
-    working_dir: /source
-    volumes:
-      - /home/rancher/code/nomad-simplified:/source
-    environment:
-      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
-      VAULT_AZUREKEYVAULT_VAULT_NAME: ${VAULT_AZUREKEYVAULT_VAULT_NAME}
-      VAULT_AZUREKEYVAULT_KEY_NAME: ${VAULT_AZUREKEYVAULT_KEY_NAME}
 
-  nomad2:
-    container_name: nomad2
-    image: docker:26.1.4
-    privileged: true
+  node2:
+    <<: *service-docker
+    container_name: node2
     networks:
       test:
         ipv4_address: 10.10.10.12
-    working_dir: /source
-    volumes:
-      - /home/rancher/code/nomad-simplified:/source
-    environment:
-      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
-      VAULT_AZUREKEYVAULT_VAULT_NAME: ${VAULT_AZUREKEYVAULT_VAULT_NAME}
-      VAULT_AZUREKEYVAULT_KEY_NAME: ${VAULT_AZUREKEYVAULT_KEY_NAME}
 
-  nomad3:
-    container_name: nomad3
-    image: docker:26.1.4
-    privileged: true
+  node3:
+    <<: *service-docker
+    container_name: node3
     networks:
       test:
         ipv4_address: 10.10.10.13
-    working_dir: /source
-    volumes:
-      - /home/rancher/code/nomad-simplified:/source
-    environment:
-      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
-      VAULT_AZUREKEYVAULT_VAULT_NAME: ${VAULT_AZUREKEYVAULT_VAULT_NAME}
-      VAULT_AZUREKEYVAULT_KEY_NAME: ${VAULT_AZUREKEYVAULT_KEY_NAME}
 
   # Mimics Azure Managed Identity service
   azure-identity:

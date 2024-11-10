@@ -6,24 +6,20 @@ https://github.com/testdrivenio/vault-consul-docker/blob/master/docker-compose.y
 https://github.com/rms1000watt/nomad/blob/master/docker-compose.yml
 
 # Testing
+az ad sp create-for-rbac -n nomad-simplified --years 30
+
 export AZURE_TENANT_ID="d9007062-1aae-4619-abb0-320699664975"
 export AZURE_CLIENT_ID="e0f366eb-82cb-4037-98f5-2b632147615f"
 export AZURE_CLIENT_SECRET="LCj8Q~hnnqa.utk5ypOpe_Jdxgr0C_Z3HuDQHaB3"
 export VAULT_AZUREKEYVAULT_VAULT_NAME="kv-nomad-simplified"
 export VAULT_AZUREKEYVAULT_KEY_NAME="test-automation"
+source .versions
 
-az ad sp create-for-rbac -n nomad-simplified --years 30
-{
-  "appId": "e0f366eb-82cb-4037-98f5-2b632147615f",
-  "displayName": "nomad-simplified",
-  "password": "LCj8Q~hnnqa.utk5ypOpe_Jdxgr0C_Z3HuDQHaB3",
-  "tenant": "d9007062-1aae-4619-abb0-320699664975"
-}
+docker compose -f lab.yml up -d
 
-# Vault init
-Init certificate
-```bash
-openssl req -x509 -newkey rsa:4096 -sha256 -days 1 \
-  -nodes -keyout vault/init-config/vault-init.key -out vault/init-config/vault-init.crt -subj "/CN=localhost" \
-  -addext "subjectAltName=DNS:localhost,IP:127.0.0.1"
-```
+./vault-init.sh
+
+
+
+## Vault init
+

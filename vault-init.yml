@@ -1,6 +1,6 @@
 services:
   vault-init:
-    image: hashicorp/vault:1.18.1
+    image: hashicorp/vault:1.17.6
     container_name: vault-init
     entrypoint: sh -c 'mkdir /opt/vault/data && vault server -config=/etc/vault.d/vault.hcl'
     volumes:

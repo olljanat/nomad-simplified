@@ -6,21 +6,21 @@ storage "raft" {
     path                   = "/opt/vault/data"
     performance_multiplier = 1
     retry_join {
-        leader_api_addr        = "https://vault1:8200"
+        leader_api_addr        = "https://vault1.nomad-simplified.local:8200"
         leader_ca_file         = "/usr/local/share/ca-certificates/vault/vault_intermediate_cert.crt"
         leader_cert_file       = "/opt/vault/tls/agent.crt"
         leader_key_file        = "/opt/vault/tls/agent.key"
         insecure_skip_verify   = false
     }
     retry_join {
-        leader_api_addr        = "https://vault2:8200"
+        leader_api_addr        = "https://vault2.nomad-simplified.local:8200"
         leader_ca_file         = "/usr/local/share/ca-certificates/vault/vault_intermediate_cert.crt"
         leader_cert_file       = "/opt/vault/tls/agent.crt"
         leader_key_file        = "/opt/vault/tls/agent.key"
         insecure_skip_verify   = false
     }
     retry_join {
-        leader_api_addr        = "https://vault3:8200"
+        leader_api_addr        = "https://vault3.nomad-simplified.local:8200"
         leader_ca_file         = "/usr/local/share/ca-certificates/vault/vault_intermediate_cert.crt"
         leader_cert_file       = "/opt/vault/tls/agent.crt"
         leader_key_file        = "/opt/vault/tls/agent.key"

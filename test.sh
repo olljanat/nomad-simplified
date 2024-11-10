@@ -2,12 +2,12 @@
 
 source .versions
 
-# docker exec -it nomad1 docker compose -f vault-init.yml up -d
-# docker exec -it nomad1 docker exec -it vault-init vault operator init
+# docker exec -it node1 docker compose -f vault-init.yml up -d
+# docker exec -it node1 docker exec -it vault-init vault operator init
 
 
 sudo ip address add 169.254.169.254/32 dev eth0
 docker compose -f lab.yml up -d
 
 
-# docker exec -it nomad1 docker compose up
+# docker exec -it node1 docker compose up

@@ -1,16 +1,41 @@
 services:
+  vault:
+    image: hashicorp/vault:${VAULT_VERSION}
+    container_name: vault1
+    #command: server -config=/etc/vault.d/vault.hcl
+    entrypoint: sh -c 'sleep 10s && vault server -config=/etc/vault.d/vault.hcl'
+    volumes:
+      - ./vault/config:/etc/vault.d
+      - ./vault:/opt/vault
+    privileged: true
+    network_mode: host
+    restart: always
+    environment:
+      VAULT_RAFT_NODE_ID: vault1
+      VAULT_API_ADDR: https://vault1.nomad-simplified.local:8200
+      VAULT_CLUSTER_ADDR: https://vault1.nomad-simplified.local:8201
+      VAULT_ADDR:  https://0.0.0.0:8200
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID}
+      VAULT_AZUREKEYVAULT_VAULT_NAME: ${VAULT_AZUREKEYVAULT_VAULT_NAME}
+      VAULT_AZUREKEYVAULT_KEY_NAME: ${VAULT_AZUREKEYVAULT_KEY_NAME}
+
   consul-template:
     image: hashicorp/consul-template:${CONSUL_TEMPLATE_VERSION}
     container_name: consul-template
     command: -config /etc/consul-template/etc.d
     privileged: true
     network_mode: host
+    restart: always
     environment:
+      COMMON_NAME: node1.nomad-simplified.local
       VAULT_TOKEN: ${VAULT_TOKEN}
     volumes:
       - ./consul-template/config:/etc/consul-template/etc.d
       - ./consul/data:/opt/consul
-      - ./nomad/data:/etc/nomad.d
+      - ./consul/config:/etc/consul.d
+      - ./nomad/config:/etc/nomad.d
+      - ./nomad/data:/opt/nomad
+      - ./vault/config:/etc/vault.d
       - ./vault/data:/opt/vault
 
   # consul:
@@ -19,25 +44,8 @@ services:
   #   command: agent -server -config-dir=/etc/consul.d
   #   privileged: true
   #   network_mode: host
+  #   restart: always
   #   volumes:
   #     - ./consul/config:/etc/consul.d
   #     - ./consul/data:/opt/consul
 
-  # vault:
-  #   image: hashicorp/vault:${VAULT_VERSION}
-  #   container_name: vault1
-  #   ports:
-  #     - 8200:8200
-  #   volumes:
-  #     - ./vault/config:/vault/config
-  #     - ./vault/policies:/vault/policies
-  #     - ./vault/data:/vault/data
-  #     - ./vault/logs:/vault/logs
-  #   environment:
-  #     - VAULT_ADDR=http://127.0.0.1:8200
-  #     - VAULT_API_ADDR=http://127.0.0.1:8200
-  #   command: server -config=/vault/config/vault-config.json
-  #   cap_add:
-  #     - IPC_LOCK
-  #   depends_on:
-  #     - consul

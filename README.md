@@ -4,6 +4,7 @@
 https://github.com/hashicorp/learn-consul-docker/tree/main/datacenter-deploy-hashistack
 https://github.com/testdrivenio/vault-consul-docker/blob/master/docker-compose.yml
 https://github.com/rms1000watt/nomad/blob/master/docker-compose.yml
+https://github.com/covermymeds/azure-key-vault-agent
 
 # Testing
 az ad sp create-for-rbac -n nomad-simplified --years 30
@@ -16,10 +17,7 @@ export VAULT_AZUREKEYVAULT_KEY_NAME="test-automation"
 source .versions
 
 docker compose -f lab.yml up -d
-
 ./vault-init.sh
 
-
-
-## Vault init
-
+export VAULT_TOKEN=$(cat vault/secrets/vault_token)
+docker exec -it node1 docker compose up

@@ -4,9 +4,9 @@ services:
     container_name: vault-init
     entrypoint: sh -c 'mkdir /opt/vault/data && vault server -config=/etc/vault.d/vault.hcl'
     volumes:
-      - ./certs:/opt/certs
+      - ./secrets:/opt/secrets
       - ./vault/init-config:/etc/vault.d
-      - ./vault:/opt/vault
+      - vault:/opt/vault
     privileged: true
     network_mode: host
     environment:
@@ -16,3 +16,8 @@ services:
       AZURE_TENANT_ID: ${AZURE_TENANT_ID}
       VAULT_AZUREKEYVAULT_VAULT_NAME: ${VAULT_AZUREKEYVAULT_VAULT_NAME}
       VAULT_AZUREKEYVAULT_KEY_NAME: ${VAULT_AZUREKEYVAULT_KEY_NAME}
+
+volumes:
+  vault:
+    name: vault
+    driver: local

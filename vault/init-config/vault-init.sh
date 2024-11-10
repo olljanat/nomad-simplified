@@ -1,7 +1,7 @@
 #!/bin/sh
 apk --no-cache add jq
 
-export VAULT_TOKEN=$(cat /opt/vault/secrets/vault_token)
+export VAULT_TOKEN=$(cat /opt/secrets/vault_token)
 
 vault secrets enable -path=secret/generic/ kv-v2
 vault secrets enable -path=secret/environments/ kv-v2

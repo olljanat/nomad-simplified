@@ -3,8 +3,8 @@ ui_config = {
 }
 server = true
 bootstrap_expect = 3
-retry_join = ["10.10.10.11","10.10.10.12","10.10.10.13"]
-bind_addr = "0.0.0.0"
+retry_join = ["node1","node2","node3"]
+bind_addr = "{{GetInterfaceIP \"eth0\"}}"
 client_addr = "0.0.0.0"
 connect {
     enabled = true

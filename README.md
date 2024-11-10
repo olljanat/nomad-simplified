@@ -17,7 +17,7 @@ export VAULT_AZUREKEYVAULT_KEY_NAME="test-automation"
 source .versions
 
 docker compose -f lab.yml up -d
-./vault-init.sh
+./init.sh
 
 export VAULT_TOKEN=$(cat vault/secrets/vault_token)
 docker exec -it node1 docker compose up

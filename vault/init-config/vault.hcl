@@ -9,8 +9,8 @@ storage "raft" {
 listener "tcp" {
     address         = "127.0.0.1:8200"
     cluster_address = "127.0.0.1:8201"
-    tls_cert_file   = "/etc/vault.d/vault-init.crt"
-    tls_key_file    = "/etc/vault.d/vault-init.key"
+    tls_cert_file   = "/opt/certs/nomad-simplified.crt"
+    tls_key_file    = "/opt/certs/nomad-simplified.key"
     tls_min_version = "tls12"
 }
 

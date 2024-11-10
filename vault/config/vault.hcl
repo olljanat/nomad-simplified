@@ -6,32 +6,32 @@ storage "raft" {
     path                   = "/opt/vault/data"
     performance_multiplier = 1
     retry_join {
-        leader_api_addr        = "https://vault1.nomad-simplified.local:8200"
-        leader_ca_file         = "/usr/local/share/ca-certificates/vault/vault_intermediate_cert.crt"
-        leader_cert_file       = "/opt/vault/tls/agent.crt"
-        leader_key_file        = "/opt/vault/tls/agent.key"
+        leader_api_addr        = "https://node1:8200"
+        leader_ca_file         = "/opt/certs/rootca.crt"
+        leader_cert_file       = "/opt/certs/nomad-simplified.crt"
+        leader_key_file        = "/opt/certs/nomad-simplified.key"
         insecure_skip_verify   = false
     }
     retry_join {
-        leader_api_addr        = "https://vault2.nomad-simplified.local:8200"
-        leader_ca_file         = "/usr/local/share/ca-certificates/vault/vault_intermediate_cert.crt"
-        leader_cert_file       = "/opt/vault/tls/agent.crt"
-        leader_key_file        = "/opt/vault/tls/agent.key"
+        leader_api_addr        = "https://node2:8200"
+        leader_ca_file         = "/opt/certs/rootca.crt"
+        leader_cert_file       = "/opt/certs/nomad-simplified.crt"
+        leader_key_file        = "/opt/certs/nomad-simplified.key"
         insecure_skip_verify   = false
     }
     retry_join {
-        leader_api_addr        = "https://vault3.nomad-simplified.local:8200"
-        leader_ca_file         = "/usr/local/share/ca-certificates/vault/vault_intermediate_cert.crt"
-        leader_cert_file       = "/opt/vault/tls/agent.crt"
-        leader_key_file        = "/opt/vault/tls/agent.key"
+        leader_api_addr        = "https://node3:8200"
+        leader_ca_file         = "/opt/certs/rootca.crt"
+        leader_cert_file       = "/opt/certs/nomad-simplified.crt"
+        leader_key_file        = "/opt/certs/nomad-simplified.key"
         insecure_skip_verify   = false
     }
 }
 
 listener "tcp" {
     address         = "0.0.0.0:8200"
-    tls_cert_file   = "/opt/vault/tls/agent.crt"
-    tls_key_file    = "/opt/vault/tls/agent.key"
+    tls_cert_file   = "/opt/certs/nomad-simplified.crt"
+    tls_key_file    = "/opt/certs/nomad-simplified.key"
     tls_min_version = "tls12"
     telemetry {
         unauthenticated_metrics_access = true

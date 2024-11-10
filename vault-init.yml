@@ -4,6 +4,7 @@ services:
     container_name: vault-init
     entrypoint: sh -c 'mkdir /opt/vault/data && vault server -config=/etc/vault.d/vault.hcl'
     volumes:
+      - ./certs:/opt/certs
       - ./vault/init-config:/etc/vault.d
       - ./vault:/opt/vault
     privileged: true

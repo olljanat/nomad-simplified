@@ -2,8 +2,9 @@
 
 if [ ! -f "certs/nomad-simplified.crt" ]; then
   openssl req -x509 -newkey rsa:4096 -sha256 -days 90 \
-    -nodes -keyout certs/all-in-one.key -out certs/all-in-one.crt -subj "/CN=nomad-simplified.local" \
-    -addext "subjectAltName=DNS:nomad-simplified.local,DNS:node1.nomad-simplified.local,DNS:node2.nomad-simplified.local,DNS:node3.nomad-simplified.local,IP:127.0.0.1"
+    -nodes -keyout certs/nomad-simplified.key -out certs/nomad-simplified.crt -subj "/CN=nomad-simplified.local" \
+    -addext "subjectAltName=DNS:nomad-simplified.local,DNS:node1,DNS:node2,DNS:node3,IP:127.0.0.1"
+  cp certs/nomad-simplified.crt certs/rootca.crt
 fi
 
 if [ ! -d "vault/data" ]; then

@@ -5,6 +5,7 @@ services:
     #command: server -config=/etc/vault.d/vault.hcl
     entrypoint: sh -c 'sleep 10s && vault server -config=/etc/vault.d/vault.hcl'
     volumes:
+      - ./certs:/opt/certs
       - ./vault/config:/etc/vault.d
       - ./vault:/opt/vault
     privileged: true
@@ -12,31 +13,31 @@ services:
     restart: always
     environment:
       VAULT_RAFT_NODE_ID: vault1
-      VAULT_API_ADDR: https://vault1.nomad-simplified.local:8200
-      VAULT_CLUSTER_ADDR: https://vault1.nomad-simplified.local:8201
+      VAULT_API_ADDR: https://node1:8200
+      VAULT_CLUSTER_ADDR: https://node1:8201
       VAULT_ADDR:  https://0.0.0.0:8200
       AZURE_TENANT_ID: ${AZURE_TENANT_ID}
       VAULT_AZUREKEYVAULT_VAULT_NAME: ${VAULT_AZUREKEYVAULT_VAULT_NAME}
       VAULT_AZUREKEYVAULT_KEY_NAME: ${VAULT_AZUREKEYVAULT_KEY_NAME}
 
-  consul-template:
-    image: hashicorp/consul-template:${CONSUL_TEMPLATE_VERSION}
-    container_name: consul-template
-    command: -config /etc/consul-template/etc.d
-    privileged: true
-    network_mode: host
-    restart: always
-    environment:
-      COMMON_NAME: node1.nomad-simplified.local
-      VAULT_TOKEN: ${VAULT_TOKEN}
-    volumes:
-      - ./consul-template/config:/etc/consul-template/etc.d
-      - ./consul/data:/opt/consul
-      - ./consul/config:/etc/consul.d
-      - ./nomad/config:/etc/nomad.d
-      - ./nomad/data:/opt/nomad
-      - ./vault/config:/etc/vault.d
-      - ./vault/data:/opt/vault
+  # consul-template:
+  #   image: hashicorp/consul-template:${CONSUL_TEMPLATE_VERSION}
+  #   container_name: consul-template
+  #   command: -config /etc/consul-template/etc.d
+  #   privileged: true
+  #   network_mode: host
+  #   restart: always
+  #   environment:
+  #     COMMON_NAME: node1
+  #     VAULT_TOKEN: ${VAULT_TOKEN}
+  #   volumes:
+  #     - ./consul-template/config:/etc/consul-template/etc.d
+  #     - ./consul/data:/opt/consul
+  #     - ./consul/config:/etc/consul.d
+  #     - ./nomad/config:/etc/nomad.d
+  #     - ./nomad/data:/opt/nomad
+  #     - ./vault/config:/etc/vault.d
+  #     - ./vault/data:/opt/vault
 
   # consul:
   #   image: hashicorp/consul:${CONSUL_VERSION}

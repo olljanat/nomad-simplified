@@ -1,5 +1,4 @@
 certs/*
-!certs/rootca.cnf
 consul/data/
 nomad/data/
 vault/init-config/vault-init.crt

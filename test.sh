@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source .versions
+
 # docker exec -it nomad1 docker compose -f vault-init.yml up -d
 # docker exec -it nomad1 docker exec -it vault-init vault operator init
 

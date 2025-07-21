@@ -1,0 +1,7 @@
+#cloud-config
+write_files:
+  - path: /etc/ssh/sshd_config.d/overwrite.conf
+    permissions: "0644"
+    owner: root
+    content: |
+      AllowTcpForwarding yes

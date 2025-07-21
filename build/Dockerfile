@@ -6,4 +6,7 @@ RUN apt-get update \
         && apt-get update \
         && apt-get install -y consul consul-template nomad vault \
         && rm -rf /var/lib/apt/lists/* \
-        && rm -rf /opt/*
+	&& rm -rf /opt/* \
+	&& rm -rf /etc/consul.d/* \
+	&& rm -rf /etc/nomad.d/* \
+	&& rm -rf /etc/vault.d/

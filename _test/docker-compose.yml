@@ -1,0 +1,29 @@
+services:
+
+  # TODO: Add consul-template
+
+  consul:
+    image: hashistack:dev-v1
+    #user: consul
+    container_name: consul
+    hostname: ${HOSTNAME}
+    # entrypoint: consul agent -config-dir=/etc/consul.d
+    command: consul agent -server -config-dir=/etc/consul.d -config-file=/etc/consul.d/extra/server.hcl -bind=${HOST_IP}
+    environment:
+      CONSUL_DATACENTER: consuldc
+      CONSUL_ENCRYPT: ${CONSUL_ENCRYPT} # Generate with "consul keygen"
+      CONSUL_RETRY_JOIN: ${CONSUL_RETRY_JOIN}
+      HOST_IP: ${HOST_IP}
+    network_mode: host
+    restart: always
+    volumes:
+      - consul:/opt/consul
+      - tls:/opt/tls
+
+volumes:
+  consul:
+    name: consul
+    driver: local
+  tls:
+    name: tls
+    driver: local

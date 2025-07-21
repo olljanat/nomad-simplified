@@ -22,3 +22,6 @@ COPY /consul.d /etc/consul.d
 
 # Remove Windows specific files
 RUN rm -f /etc/consul.d/windows.hcl
+
+COPY /entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]

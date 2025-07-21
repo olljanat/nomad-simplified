@@ -21,7 +21,7 @@ ports {
 }
 
 telemetry {
-  prometheus_retention_time = 720h
+  prometheus_retention_time = "720h"
 }
 
 ui_config = {

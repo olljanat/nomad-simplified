@@ -10,7 +10,7 @@ ports {
   grpc_tls = 8503
   dns  = 8600
   http = -1
-  https = 8500
+  https = 8501
 }
 
 telemetry {
@@ -25,6 +25,6 @@ tls {
   }
 }
 
-ui_config = {
-  "enabled"=true
+ui_config {
+  enabled = true
 }

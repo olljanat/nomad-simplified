@@ -8,7 +8,7 @@
 #   cp /opt/tls/agent.crt /opt/tls/ca.crt
 # fi
 
-if [[ -n "$CONSUL_RETRY_JOIN" ]]; then
+if [[ -n "$CONSUL_RETRY_JOIN1" && -n "$CONSUL_RETRY_JOIN2" ]]; then
   CLUSTER_CONFIG='retry_join = ["'
   CLUSTER_CONFIG+=$CONSUL_RETRY_JOIN1
   CLUSTER_CONFIG+='","'

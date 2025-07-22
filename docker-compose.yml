@@ -1,0 +1,45 @@
+services:
+  nomad:
+    image: ghcr.io/olljanat/nomad-simplified:${VERSION}
+    container_name: nomad${NOMAD_NODE_NUM}
+    hostname: nomad${NOMAD_NODE_NUM}
+    command: nomad agent -server -config=/etc/nomad.d -config=/etc/nomad.d/role/server.hcl -bind=${NODE_IP} -region=${REGION} -dc=${DATACENTER}
+    # entrypoint: /bin/client-entry.sh
+    # command: nomad agent -client -config=/etc/nomad.d -config=/etc/nomad.d/role/client.hcl -region=${REGION} -dc=${DATACENTER} -node-pool=${NODE_POOL}
+    environment:
+      NOMAD_ADDR: http://${NOMAD_NODE_IP}:4646
+      SERVER1: ${SERVER1}
+      SERVER2: ${SERVER2}
+      SERVER3: ${SERVER3}
+    network_mode: host
+    uts: host
+    pid: host
+    ipc: host
+    privileged: true
+    restart: always
+    volumes:
+    - nomad:/opt/nomad
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - ./tls:/opt/tls:ro
+
+  coredns:
+    image: ghcr.io/olljanat/nomad-simplified:${VERSION}
+    container_name: nomad${NOMAD_NODE_NUM}-coredns
+    command: coredns -conf /etc/coredns/Corefile
+    environment:
+      NOMAD_TOKEN: ${COREDNS_NOMAD_TOKEN}
+      NOMAD_SKIP_VERIFY: "true"
+      SERVER1: ${SERVER1}
+      SERVER2: ${SERVER2}
+      SERVER3: ${SERVER3}
+    network_mode: host
+    uts: host
+    pid: host
+    ipc: host
+    privileged: true
+    restart: always
+
+volumes:
+  nomad:
+    name: nomad
+    driver: local

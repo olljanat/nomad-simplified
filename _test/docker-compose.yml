@@ -6,24 +6,49 @@ services:
     image: hashistack:dev-v1
     #user: consul
     container_name: consul
-    hostname: ${HOSTNAME}
     command: consul agent -server -config-dir=/etc/consul.d -config-file=/etc/consul.d/role/server.hcl -bind=${HOST_IP}
     # entrypoint: consul agent -config-dir=/etc/consul.d -config-file=/etc/consul.d/role/client.hcl
     #entrypoint: sleep 120s
     environment:
       CONSUL_ENCRYPT: ${CONSUL_ENCRYPT} # Generate with "consul keygen"
-      CONSUL_RETRY_JOIN1: ${CONSUL_RETRY_JOIN1}
-      CONSUL_RETRY_JOIN2: ${CONSUL_RETRY_JOIN2}
-      HOST_IP: ${HOST_IP}
+      SERVER1: ${SERVER1}
+      SERVER2: ${SERVER2}
+      SERVER3: ${SERVER3}
+      # HOST_IP: ${HOST_IP}
     network_mode: host
+    uts: host
     restart: always
     volumes:
       - consul:/opt/consul
-      - tls:/opt/tls
+    #  - tls:/opt/tls
+
+  nomad:
+    image: hashistack:dev-v1
+    #user: nomad
+    container_name: nomad
+    command: nomad agent -server -config=/etc/nomad.d -config=/etc/nomad.d/role/server.hcl -bind=${HOST_IP}
+    # entrypoint: nomad agent -client -config=/etc/nomad.d -config=/etc/nomad.d/role/client.hcl
+    environment:
+      SERVER1: ${SERVER1}
+      SERVER2: ${SERVER2}
+      SERVER3: ${SERVER3}
+      # HOST_IP: ${HOST_IP}
+    network_mode: host
+    uts: host
+    pid: host
+    ipc: host
+    privileged: true
+    restart: always
+    volumes:
+      - consul:/opt/consul
+    #  - tls:/opt/tls
 
 volumes:
   consul:
     name: consul
+    driver: local
+  nomad:
+    name: nomad
     driver: local
   tls:
     name: tls

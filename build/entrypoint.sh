@@ -8,13 +8,31 @@
 #   cp /opt/tls/agent.crt /opt/tls/ca.crt
 # fi
 
-if [[ -n "$CONSUL_RETRY_JOIN1" && -n "$CONSUL_RETRY_JOIN2" ]]; then
-  CLUSTER_CONFIG='retry_join = ["'
-  CLUSTER_CONFIG+=$CONSUL_RETRY_JOIN1
-  CLUSTER_CONFIG+='","'
-  CLUSTER_CONFIG+=$CONSUL_RETRY_JOIN2
-  CLUSTER_CONFIG+='"]'
-  echo -e "$CLUSTER_CONFIG" | tee /etc/consul.d/cluster.hcl
+# Generate cluster join config for Consul and Nomad
+CLUSTER_CONFIG='retry_join = ["'
+NOMAD_CLUSTER='client {\n  server_join {\n    '
+FIRST_SERVER=true
+if [[ -n "$SERVER1" ]]; then
+  CLUSTER_CONFIG+=$SERVER1
+  FIRST_SERVER=false
 fi
+if [[ -n "$SERVER2" ]]; then
+  if [[ "$FIRST_SERVER" != "true" ]]; then
+    CLUSTER_CONFIG+='","'
+  fi
+  CLUSTER_CONFIG+=$SERVER2
+  FIRST_SERVER=false
+fi
+if [[ -n "$SERVER3" ]]; then
+  if [[ "$FIRST_SERVER" != "true" ]]; then
+    CLUSTER_CONFIG+='","'
+  fi
+  CLUSTER_CONFIG+=$SERVER3
+fi
+CLUSTER_CONFIG+='"]'
+NOMAD_CLUSTER+=$CLUSTER_CONFIG
+NOMAD_CLUSTER+='\n  }\n}'
+echo -e "$CLUSTER_CONFIG" | tee /etc/consul.d/cluster.hcl
+echo -e "$NOMAD_CLUSTER" | tee /etc/nomad.d/cluster.hcl
 
 $@

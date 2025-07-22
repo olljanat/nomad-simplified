@@ -1,15 +1,8 @@
 client_addr = "0.0.0.0"
-verify_incoming = true
-verify_outgoing = true
-verify_server_hostname = true
 
 acl {
   enabled = true
   enable_token_persistence = true
-}
-
-connect {
-  enabled = true
 }
 
 ports {
@@ -24,7 +17,14 @@ telemetry {
   prometheus_retention_time = "720h"
 }
 
+tls {
+  defaults{
+    verify_incoming = false
+    verify_outgoing = false
+    verify_server_hostname = false
+  }
+}
+
 ui_config = {
   "enabled"=true
 }
-

@@ -7,12 +7,13 @@ services:
     #user: consul
     container_name: consul
     hostname: ${HOSTNAME}
-    # entrypoint: consul agent -config-dir=/etc/consul.d
-    command: consul agent -server -config-dir=/etc/consul.d -config-file=/etc/consul.d/extra/server.hcl -bind=${HOST_IP}
+    command: consul agent -server -config-dir=/etc/consul.d -config-file=/etc/consul.d/role/server.hcl -bind=${HOST_IP}
+    # entrypoint: consul agent -config-dir=/etc/consul.d -config-file=/etc/consul.d/role/client.hcl
+    #entrypoint: sleep 120s
     environment:
-      CONSUL_DATACENTER: consuldc
       CONSUL_ENCRYPT: ${CONSUL_ENCRYPT} # Generate with "consul keygen"
-      CONSUL_RETRY_JOIN: ${CONSUL_RETRY_JOIN}
+      CONSUL_RETRY_JOIN1: ${CONSUL_RETRY_JOIN1}
+      CONSUL_RETRY_JOIN2: ${CONSUL_RETRY_JOIN2}
       HOST_IP: ${HOST_IP}
     network_mode: host
     restart: always

@@ -1,0 +1,16 @@
+service.nomad.:53 {
+  log
+  cache
+  errors
+  nomad {
+    zone service.nomad
+    address https://127.0.0.1:4646
+    ttl 10
+  }
+}
+
+.:53 {
+  cache
+  errors
+  forward . 127.0.0.11
+}

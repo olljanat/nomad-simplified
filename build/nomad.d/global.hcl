@@ -7,8 +7,7 @@ client {
 }
 
 consul {
-  address = "https://127.0.0.1:8501"
-  verify_ssl = false
+  address = "http://127.0.0.1:8500"
   server_service_name = "nomad"
   client_service_name = "nomad-client"
   auto_advertise = true

@@ -1,0 +1,50 @@
+# escape=`
+ARG TARGET_OS_VERSION=uknown
+
+## Stage 1: Build in Windows Server 2025 
+
+# Use busybox as default shell
+FROM mcr.microsoft.com/windows/nanoserver:ltsc2025 AS build
+USER ContainerAdministrator
+ENV PATH=C:\bin;C:\Windows\System32;C:\Windows;
+RUN mkdir bin tmp `
+    && curl -fs https://frippery.org/files/busybox/busybox64.exe -o c:\bin\busybox.exe `
+    && echo off `
+    && FOR /F "tokens=* USEBACKQ" %F IN (`c:\bin\busybox.exe --list`) DO ( mklink C:\bin\%F.exe C:\bin\busybox.exe )
+
+# Add Hashistack binaries
+ARG CONSUL_VERSION
+ARG NOMAD_VERSION
+ARG COREDNS_VERSION
+ADD https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_windows_amd64.zip /tmp/consul.zip
+ADD https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_windows_amd64.zip /tmp/nomad.zip
+ADD https://github.com/coredns/coredns/releases/download/v${COREDNS_VERSION}/coredns_${COREDNS_VERSION}_windows_amd64.tgz /tmp/coredns.tgz
+RUN mkdir c:\etc\consul.d c:\etc\nomad.d c:\coredns c:\opt\consul c:\opt\nomad `
+    && unzip -o /tmp/consul.zip -d /bin `
+    && unzip -o /tmp/nomad.zip -d /bin `
+    && tar -xzf /tmp/coredns.tgz -C /bin
+
+# Add static config files
+COPY /consul.d /etc/consul.d
+COPY /nomad.d /etc/nomad.d
+COPY /coredns /etc/coredns
+COPY /entrypoint.cmd /bin/
+COPY /entrypoint.sh /bin/
+
+# Remove Linux specific files
+RUN rm -f /etc/consul.d/linux.hcl
+RUN rm -f /etc/nomad.d/linux.hcl
+
+# FixMe: Remove this workaround after https://github.com/hashicorp/go-sockaddr/pull/57 is merged
+RUN copy c:\bin\sh.exe c:\bin\powershell.exe
+
+
+## Stage 2: Release for requested version
+FROM mcr.microsoft.com/windows/nanoserver:${TARGET_OS_VERSION} AS runtime
+USER ContainerAdministrator
+ENV PATH=C:\bin;C:\Windows\System32;C:\Windows;
+COPY --from=build /bin/ /bin/
+COPY --from=build /etc/ /etc/
+COPY --from=build /opt/ /opt/
+ENTRYPOINT ["c:\\bin\\entrypoint.cmd"]
+WORKDIR /opt/tls

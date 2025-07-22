@@ -1,0 +1,45 @@
+services:
+  consul:
+    image: ollijanatuinen/hashistack-simplified:${VERSION}
+    container_name: hashistack_consul
+    command: consul agent -server -config-dir=/etc/consul.d -config-file=/etc/consul.d/role/server.hcl -bind=${NODE_IP}
+    # command: consul agent -config-dir=/etc/consul.d -config-file=/etc/consul.d/role/client.hcl
+    environment:
+      CONSUL_ENCRYPT: ${CONSUL_ENCRYPT} # Generate with "consul keygen"
+      SERVER1: ${SERVER1}
+      SERVER2: ${SERVER2}
+      SERVER3: ${SERVER3}
+    network_mode: host
+    uts: host
+    restart: always
+    volumes:
+    - consul:/opt/consul
+
+  nomad:
+    image: ollijanatuinen/hashistack-simplified:${VERSION}
+    container_name: hashistack_nomad
+    command: nomad agent -server -config=/etc/nomad.d -config=/etc/nomad.d/role/server.hcl -bind=${NODE_IP} -region=${REGION} -dc=${DATACENTER}
+    # command: nomad agent -client -config=/etc/nomad.d -config=/etc/nomad.d/role/client.hcl -region=${REGION} -dc=${DATACENTER} -node-pool=${NODE_POOL}
+    environment:
+      NOMAD_ADDR: http://${NOMAD_NODE_IP}:4646
+      SERVER1: ${SERVER1}
+      SERVER2: ${SERVER2}
+      SERVER3: ${SERVER3}
+    network_mode: host
+    uts: host
+    pid: host
+    ipc: host
+    privileged: true
+    restart: always
+    volumes:
+    - nomad:/opt/nomad
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - ./tls:/opt/tls:ro
+
+volumes:
+  consul:
+    name: consul
+    driver: local
+  nomad:
+    name: nomad
+    driver: local

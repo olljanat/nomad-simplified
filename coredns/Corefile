@@ -1,0 +1,13 @@
+consul.:53 {
+    log
+    cache
+    errors
+    rewrite name regex ^([^.]+)\.([^.]+) {1}-{2}.service.consul
+    forward . 127.0.0.1:8600
+}
+
+.:53 {
+    cache
+    errors
+    forward . 8.8.8.8
+}

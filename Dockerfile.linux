@@ -1,0 +1,28 @@
+FROM busybox:1.37
+
+# Add Hashistack binaries
+ARG CONSUL_VERSION
+ARG NOMAD_VERSION
+ARG COREDNS_VERSION
+ADD https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip /tmp/consul.zip
+ADD https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip /tmp/nomad.zip
+ADD https://github.com/coredns/coredns/releases/download/v${COREDNS_VERSION}/coredns_${COREDNS_VERSION}_linux_amd64.tgz /tmp/coredns.tgz
+RUN mkdir -p /etc/consul.d /etc/nomad.d /coredns /opt/consul /opt/nomad \
+    && unzip -o /tmp/consul.zip -d /bin \
+    && unzip -o /tmp/nomad.zip -d /bin \
+    && tar -xzf /tmp/coredns.tgz -C /bin
+
+# Add static config files
+COPY /consul.d /etc/consul.d
+COPY /nomad.d /etc/nomad.d
+COPY /coredns /etc/coredns
+COPY /entrypoint.sh /bin/
+
+# Remove Windows specific files
+RUN rm -f /etc/consul.d/windows.hcl
+RUN rm -f /etc/nomad.d/windows.hcl
+
+# Define entrypoint
+COPY /entrypoint.sh /bin/
+ENTRYPOINT ["/bin/entrypoint.sh"]
+WORKDIR /opt/tls

@@ -1,0 +1,67 @@
+services:
+  consul:
+    image: ollijanatuinen/hashistack-simplified:${VERSION}
+    container_name: hashistack_consul
+    hostname: ${HOSTNAME}
+    command: consul agent -config-dir=/etc/consul.d -config-file=/etc/consul.d/role/client.hcl -advertise=${NODE_IP}
+    environment:
+      CONSUL_ENCRYPT: ${CONSUL_ENCRYPT} # Generate with "consul keygen"
+      SERVER1: ${SERVER1}
+      SERVER2: ${SERVER2}
+      SERVER3: ${SERVER3}
+    networks:
+      hashistack:
+        ipv4_address: 172.16.201.11
+    ports:
+    - 8301:8301/udp
+    - 8301:8301/tcp
+    - 8500:8500/tcp
+    - 8503:8503/tcp
+    - 8600:8600/udp
+    - 8600:8600/tcp
+    restart: always
+    volumes:
+    - type: volume
+      source: consul
+      target: c:/opt/consul
+
+  nomad:
+    image: ollijanatuinen/hashistack-simplified:${VERSION}
+    container_name: hashistack_nomad
+    hostname: ${HOSTNAME}
+    command: nomad agent -client -config=/etc/nomad.d -config=/etc/nomad.d/role/client.hcl -region=${REGION} -dc=${DATACENTER} -node-pool=${NODE_POOL}
+    environment:
+      SERVER1: ${SERVER1}
+      SERVER2: ${SERVER2}
+      SERVER3: ${SERVER3}
+    networks:
+      hashistack:
+        ipv4_address: 172.16.201.12
+    restart: always
+    volumes:
+    - type: volume
+      source: nomad
+      target: c:/opt/nomad
+    - type: npipe
+      source: \\.\pipe\docker_engine
+      target: \\.\pipe\docker_engine
+    - type: bind
+      source: ./tls
+      target: c:/opt/tls
+
+volumes:
+  consul:
+    name: consul
+    driver: local
+  nomad:
+    name: nomad
+    driver: local
+
+networks:
+  hashistack:
+    name: hashistack
+    driver: nat
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.201.0/24

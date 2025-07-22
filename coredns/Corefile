@@ -1,0 +1,20 @@
+{$DOMAIN}.:53 {
+  rewrite stop type AAAA A
+  log
+  cache
+  errors
+  nomad {
+    zone service.nomad
+    address https://{$SERVER3}:4646 https://{$SERVER2}:4646 https://{$SERVER1}:4646
+    ttl 10
+  }
+  loadbalance {
+    prefer {$COREDNS_PREFER_CIDR}
+  }
+}
+
+.:53 {
+  cache
+  errors
+  forward . 127.0.0.11
+}

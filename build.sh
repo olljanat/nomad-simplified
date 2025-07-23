@@ -25,7 +25,8 @@ mkdir -p dist/tmp/etc/nomad.d dist/tmp/opt/nomad/data dist/tmp/opt/tls
 cp -r nomad.d/* dist/tmp/etc/nomad.d/
 
 # Remove Linux specific files
-rm -f dist/tmp/etc/nomad.d/windows.hcl
+rm -f dist/tmp/etc/nomad.d/linux.hcl
+rm -f dist/tmp/etc/nomad.d/role/server.hcl
 
 # Create ZIP
 cd dist/tmp

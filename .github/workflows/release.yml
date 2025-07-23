@@ -50,6 +50,8 @@ jobs:
           echo "* [HashiCorp Nomad ${{ github.event.inputs.nomad_version }}](https://github.com/hashicorp/nomad/releases/tag/v${{ github.event.inputs.nomad_version }})" >> Release.md
           echo "* [CoreDNS with Nomad integration ${{ github.event.inputs.coredns_nomad_version }}](https://github.com/ituoga/coredns-nomad/releases/tag/v${{ github.event.inputs.coredns_nomad_version }})" >> Release.md
           echo "* Standardized minimal configuration this repository" >> Release.md
+          echo "" >> Release.md
+          echo "Linux version is available as docker image \`ghcr.io/${{ github.repository_owner }}/nomad-simplified:$VERSION\`" >> Release.md
 
       - name: create a new release with some artifacts
         uses: softprops/action-gh-release@v2

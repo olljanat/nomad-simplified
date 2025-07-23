@@ -21,6 +21,21 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock:ro
     - ./tls:/opt/tls:ro
 
+  coredns:
+    image: ghcr.io/olljanat/nomad-simplified:${VERSION}
+    container_name: nomad${NOMAD_NODE_NUM}-coredns
+    command: coredns -conf /etc/coredns/Corefile
+    environment:
+      SERVER1: ${SERVER1}
+      SERVER2: ${SERVER2}
+      SERVER3: ${SERVER3}
+    network_mode: host
+    uts: host
+    pid: host
+    ipc: host
+    privileged: true
+    restart: always
+
 volumes:
   nomad:
     name: nomad

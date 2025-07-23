@@ -4,7 +4,7 @@ service.nomad.:53 {
   errors
   nomad {
     zone service.nomad
-    address https://127.0.0.1:4646
+    address https://{$SERVER3}:4646 https://{$SERVER2}:4646 https://{$SERVER1}:4646
     ttl 10
   }
 }

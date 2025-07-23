@@ -71,6 +71,7 @@ export NODE_IP="192.168.8.119"
 export REGION="europe"
 export DATACENTER="europe-1"
 export NOMAD_NODE_NUM="1"
+export COREDNS_NOMAD_TOKEN=""
 
 docker compose -p nomad up -d
 ```
@@ -81,6 +82,22 @@ And then bootstrap ACLs with command `nomad acl bootstrap`
 Look:
 * https://developer.hashicorp.com/nomad/docs/secure/acl/bootstrap
 * https://developer.hashicorp.com/nomad/docs/secure/acl/policies/create-policy
+
+
+Create policy and token for CoreDNS
+```hcl
+namespace "*" {
+  policy = "read"
+}
+```
+
+```bash
+nomad acl policy apply -description "CoreDNS integration" integration-coredns read-all.hcl
+nomad acl token create -name="Test app-dev token" -policy=app-dev -type=client
+```
+
+And re-deploy with `COREDNS_NOMAD_TOKEN` configured.
+
 
 ## Windows
 ```powershell

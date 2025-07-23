@@ -26,6 +26,8 @@ services:
     container_name: nomad${NOMAD_NODE_NUM}-coredns
     command: coredns -conf /etc/coredns/Corefile
     environment:
+      NOMAD_TOKEN: ${COREDNS_NOMAD_TOKEN}
+      NOMAD_SKIP_VERIFY: "true"
       SERVER1: ${SERVER1}
       SERVER2: ${SERVER2}
       SERVER3: ${SERVER3}

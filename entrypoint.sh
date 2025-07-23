@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Generate cluster join config for Consul and Nomad
+# Generate cluster join config for Nomad
 export CLUSTER_CONFIG='retry_join = ["'
 export NOMAD_CLUSTER='client {\n  server_join {\n'
 export FIRST_SERVER=true
@@ -24,7 +24,6 @@ fi
 export CLUSTER_CONFIG=$CLUSTER_CONFIG'"]'
 export NOMAD_CLUSTER="$NOMAD_CLUSTER    $CLUSTER_CONFIG"
 export NOMAD_CLUSTER=$NOMAD_CLUSTER'\n  }\n}'
-echo -e "$CLUSTER_CONFIG" | tee /etc/consul.d/cluster.hcl
 echo -e "$NOMAD_CLUSTER" | tee /etc/nomad.d/cluster.hcl
 
 $@

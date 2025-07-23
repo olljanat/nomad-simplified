@@ -73,8 +73,9 @@ export SERVER3="192.168.8.121"
 export NODE_IP="192.168.8.119"
 export REGION="europe"
 export DATACENTER="europe-1"
+export NOMAD_NODE_NUM="1"
 
-docker compose -f docker-compose.linux.yml -p hashistack up -d
+docker compose -p nomad up -d
 ```
 
 ## Windows
@@ -90,5 +91,5 @@ $env:DATACENTER="europe-1"
 $env:NODE_POOL="windows"
 $env:HOSTNAME=$env:COMPUTERNAME.ToLower()
 
-docker compose -f docker-compose.windows.yml -p hashistack up -d
+# docker compose -f docker-compose.windows.yml -p hashistack up -d
 ```

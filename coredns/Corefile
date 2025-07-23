@@ -1,13 +1,16 @@
-consul.:53 {
-    log
-    cache
-    errors
-    rewrite name regex ^([^.]+)\.([^.]+) {1}-{2}.service.consul
-    forward . 127.0.0.1:8600
+service.nomad.:53 {
+  log
+  cache
+  errors
+  nomad {
+    zone service.nomad
+    address https://127.0.0.1:4646
+    ttl 10
+  }
 }
 
 .:53 {
-    cache
-    errors
-    forward . 8.8.8.8
+  cache
+  errors
+  forward . 127.0.0.11
 }

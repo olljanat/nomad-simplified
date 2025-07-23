@@ -1,3 +1,7 @@
+acl {
+  enabled = true
+}
+
 client {
   options {
     "driver.allowlist" = "docker"

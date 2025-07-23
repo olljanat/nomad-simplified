@@ -15,6 +15,3 @@ COPY /nomad.d /etc/nomad.d
 
 # Remove Windows specific files
 RUN rm -f /etc/nomad.d/windows.hcl
-
-# Make sure that certificates can be found without full path
-WORKDIR /opt/tls

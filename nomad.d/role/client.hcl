@@ -7,7 +7,7 @@ server {
 }
 
 tls {
-  ca_file = "nomad-agent-ca.pem"
-  cert_file = "nomad-client.pem"
-  key_file = "nomad-client-key.pem"
+  ca_file = "/opt/tls/nomad-agent-ca.pem"
+  cert_file = "/opt/tls/nomad-client.pem"
+  key_file = "/opt/tls/nomad-client-key.pem"
 }

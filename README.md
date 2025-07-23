@@ -8,6 +8,7 @@ Design pricipals:
 
 Images are published in Docker Hub repo [ollijanatuinen/hashistack-simplified](https://hub.docker.com/r/ollijanatuinen/hashistack-simplified)
 
+# Preparation
 ## TLS
 As first step, you should generate [TLS certificates](https://developer.hashicorp.com/nomad/docs/secure/traffic/tls)
 ```bash
@@ -38,12 +39,6 @@ docker run -it --rm -v ./tls:/tls -w /tls \
   nomad tls cert create -client -days 1825 \
   -region $REGION
 
-# Create certificate for Nomad CLI which is valid 30 days
-docker run -it --rm -v ./tls:/tls -w /tls \
-  ollijanatuinen/hashistack-simplified:${VERSION} \
-  nomad tls cert create -cli -days 30 \
-  -region $REGION
-
 # Rename files
 for file in "tls/$REGION-"*; do
   base=$(basename "$file")
@@ -64,7 +59,8 @@ Then:
 * distribute certificate authority **public** key to all servers and clients
 * store certificate authority **private** key to **offline** location and remove it from computer where it was generated
 
-## Linux
+# Deployment
+## Servers (Linux)
 ```bash
 export VERSION="20250723-linux-3"
 export CONSUL_ENCRYPT="<replace>"
@@ -78,6 +74,13 @@ export NOMAD_NODE_NUM="1"
 
 docker compose -p nomad up -d
 ```
+Then servers 2 and 3 to first one with command `nomad server join 192.168.8.119`
+
+And then bootstrap ACLs with command `nomad acl bootstrap`
+
+Look:
+* https://developer.hashicorp.com/nomad/docs/secure/acl/bootstrap
+* https://developer.hashicorp.com/nomad/docs/secure/acl/policies/create-policy
 
 ## Windows
 ```powershell

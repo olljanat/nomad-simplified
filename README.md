@@ -98,6 +98,28 @@ nomad acl token create -name="CoreDNS integration" -policy=integration-coredns -
 
 And re-deploy with `COREDNS_NOMAD_TOKEN` configured.
 
+## SSO
+Configure SSO with EntraID with:
+```json
+{
+    "OIDCDiscoveryURL": "https://login.microsoftonline.com/00000000-0000-0000-0000-000000000000/v2.0",
+    "OIDCClientID": "00000000-0000-0000-0000-000000000000",
+    "OIDCClientSecret": "<secret>",
+    "VerboseOIDCLogging": true,
+    "OIDCScopes": ["profile","groups"],
+    "AllowedRedirectURIs": [
+      "https://nomad.example.com:4646/oidc/callback"
+   ]
+}
+```
+```bash
+nomad acl auth-method create -type=oidc -name=EntraID -max-token-ttl=5m -token-locality=local -config=@oidc.json
+```
+
+Look:
+* https://support.hashicorp.com/hc/en-us/articles/23181468381843-Configuring-Azure-Active-Directory-AAD-with-Nomad-using-OpenID-Connect-OIDC
+* https://support.hashicorp.com/hc/en-us/articles/26540256080659-OIDC-Auth-setup-for-Nomad-using-Okta-as-idP
+
 
 ## Windows
 ```powershell

@@ -1,6 +1,6 @@
 services:
   nomad:
-    image: ollijanatuinen/nomad-simplified:${VERSION}
+    image: ghcr.io/olljanat/nomad-simplified:${VERSION}
     container_name: nomad${NOMAD_NODE_NUM}
     hostname: nomad${NOMAD_NODE_NUM}
     command: nomad agent -server -config=/etc/nomad.d -config=/etc/nomad.d/role/server.hcl -bind=${NODE_IP} -region=${REGION} -dc=${DATACENTER}

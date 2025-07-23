@@ -1,0 +1,61 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      nomad_version:
+        description: 'Nomad version ( https://releases.hashicorp.com/nomad/ )'
+        default: ''
+        required: true
+      coredns_nomad_version:
+        description: 'CoreDNS Nomad version ( https://github.com/ituoga/coredns-nomad/pkgs/container/coredns-nomad )'
+        default: ''
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: check tag
+        run: |
+          export VERSION=$(git describe --exact-match --tags $(git log -n1 --pretty='%h'))
+          if [ -z "$VERSION" ]; then
+            echo "Build is not started from tag. Will exit..."
+            exit 1
+          fi
+
+      - name: install prerequisites
+        run: |
+          set -euxo pipefail
+          sudo apt update -q && sudo apt install -y curl zip
+
+      - name: Log in to GitHub Container Registry
+        run: |
+          if [[ -z "$GHCR_TOKEN" ]]; then
+            export GHCR_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          fi
+          echo "${GHCR_TOKEN}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
+      - name: build release artifacts
+        run: |
+          ./build.sh ghcr.io/${{ github.repository_owner }} nomad-simplified ${{ github.event.inputs.nomad_version }} ${{ github.event.inputs.coredns_nomad_version }}
+          pushd dist
+          echo "# Release $(date '+%Y-%m-%d %R')" > Release.md
+          echo "The release contains the following components:" >> Release.md
+          echo "* [HashiCorp Nomad ${{ github.event.inputs.nomad_version }}](https://github.com/hashicorp/nomad/releases/tag/v${{ github.event.inputs.nomad_version }})" >> Release.md
+          echo "* [CoreDNS with Nomad integration ${{ github.event.inputs.coredns_nomad_version }}](https://github.com/ituoga/coredns-nomad/releases/tag/v${{ github.event.inputs.coredns_nomad_version }})" >> Release.md
+          echo "* Standardized minimal configuration this repository" >> Release.md
+
+      - name: create a new release with some artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          make_latest: true
+          body_path: dist/Release.md
+          files: |
+            dist/nomad-windows.zip

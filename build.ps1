@@ -13,7 +13,7 @@ if (docker info -f '{{ .DriverStatus }}' | ForEach-Object {$_ -like "*containerd
 }
 
 $date=Get-Date -Format "yyyyMMdd"
-$i=3
+$i=4
 $manifestTag="$org/$repo" + ":" + "$date-$i-win"
 $versionTags=""
 forEach($v in $winVersions) {

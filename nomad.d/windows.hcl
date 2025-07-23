@@ -5,10 +5,6 @@ client {
   }
 }
 
-consul {
-  address = "http://172.16.201.11:8500"
-}
-
 data_dir = "c:\\opt\\nomad\\data"
 
 plugin "docker" {

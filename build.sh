@@ -4,7 +4,7 @@ org="ollijanatuinen"
 repo="hashistack-simplified"
 
 DATE=`date +'%Y%m%d'`
-i=4
+i=5
 TAG="$org/$repo:$DATE-linux-$i"
 docker build . -t $TAG \
   -f Dockerfile.linux \

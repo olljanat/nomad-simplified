@@ -21,9 +21,8 @@ unzip -o dist/nomad.zip -d dist/tmp/bin/
 rm dist/nomad.zip
 
 # Include configs
-mkdir -p dist/tmp/etc/nomad.d dist/tmp/opt/nomad/data dist/tmp/opt/tls
+mkdir -p dist/tmp/etc/nomad.d dist/tmp/opt/nomad/data dist/tmp/logs dist/tmp/opt/tls
 cp -r nomad.d/* dist/tmp/etc/nomad.d/
-mv dist/tmp/etc/nomad.d/role/client.hcl dist/tmp/etc/nomad.d/
 
 # Remove Linux specific files
 rm -f dist/tmp/etc/nomad.d/linux.hcl

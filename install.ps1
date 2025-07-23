@@ -2,6 +2,7 @@
 $region = "europe"
 $datacenter = "europe-1"
 $version = "20250723-13"
+$serverIP = "192.168.8.119"
 
 # Download and extract
 $ProgressPreference = 'SilentlyContinue'
@@ -26,6 +27,17 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\nomad" `
 
 # Increase the non-interactive desktop heap size
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\SubSystems" -Name "SharedSection" -Value "1024,20480,768"
+
+# Update environment variables
+[Environment]::SetEnvironmentVariable("PATH", "$env:PATH;c:\bin", "Machine")
+[Environment]::SetEnvironmentVariable("NOMAD_ADDR", "https://127.0.0.1:4646", "Machine")
+[Environment]::SetEnvironmentVariable("NOMAD_SKIP_VERIFY", "true", "Machine")
+
+# Start Nomad service and register to server
+Start-Service -Name nomad
+$env:NOMAD_ADDR="https://127.0.0.1:4646"
+$env:NOMAD_SKIP_VERIFY="true"
+c:\bin\nomad.exe node config -update-servers $serverIP
 
 # Disable IPv6
 Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters -Name DisabledComponents -Value 0xff

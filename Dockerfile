@@ -1,10 +1,12 @@
+# Add CoreDNS with Nomad integration support
+ARG COREDNS_NOMAD_VERSION
+FROM ghcr.io/ituoga/coredns-nomad:v${COREDNS_NOMAD_VERSION} AS coredns
+
 # Get latest CA list
 FROM alpine AS ca
 RUN apk add -U --no-cache ca-certificates
 
-# Add CoreDNS with Nomad integration support
-ARG COREDNS_NOMAD_VERSION
-FROM ghcr.io/ituoga/coredns-nomad:v${COREDNS_NOMAD_VERSION} AS coredns
+# Build target container
 FROM busybox:1.37
 COPY --from=coredns /coredns /bin/
 RUN mkdir -p /etc/coredns

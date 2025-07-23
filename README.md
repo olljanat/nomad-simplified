@@ -4,6 +4,7 @@ Simplified Nomad setup for Linux + Windows.
 Design pricipals:
 * Keep it simple.
 * Unify between Linux and Windows as much as possible
+* [Manual clustering](https://developer.hashicorp.com/nomad/docs/deploy/clusters/connect-nodes#manual-clustering)
 
 Images are published in Docker Hub repo [ollijanatuinen/hashistack-simplified](https://hub.docker.com/r/ollijanatuinen/hashistack-simplified)
 

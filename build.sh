@@ -5,11 +5,10 @@ org=$1
 repo=$2
 nomad_version=$3
 coredns_nomad_version=$4
+version=$5
 
 # Build Docker images for Linux
-DATE=`date +'%Y%m%d'`
-i=1
-TAG="$org/$repo:$DATE-$i"
+TAG="$org/$repo:$version"
 docker build . -t $TAG \
   --build-arg NOMAD_VERSION=$nomad_version \
   --build-arg COREDNS_NOMAD_VERSION=$coredns_nomad_version

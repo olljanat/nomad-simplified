@@ -22,14 +22,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: check tag
-        run: |
-          export VERSION=$(git describe --exact-match --tags $(git log -n1 --pretty='%h'))
-          if [ -z "$VERSION" ]; then
-            echo "Build is not started from tag. Will exit..."
-            exit 1
-          fi
-
       - name: install prerequisites
         run: |
           set -euxo pipefail
@@ -44,7 +36,13 @@ jobs:
 
       - name: build release artifacts
         run: |
-          ./build.sh ghcr.io/${{ github.repository_owner }} nomad-simplified ${{ github.event.inputs.nomad_version }} ${{ github.event.inputs.coredns_nomad_version }}
+          export VERSION=$(git describe --exact-match --tags $(git log -n1 --pretty='%h'))
+          if [ -z "$VERSION" ]; then
+            echo "Build is not started from tag. Will exit..."
+            exit 1
+          fi
+
+          ./build.sh ghcr.io/${{ github.repository_owner }} nomad-simplified ${{ github.event.inputs.nomad_version }} ${{ github.event.inputs.coredns_nomad_version }} $VERSION
           pushd dist
           echo "# Release $(date '+%Y-%m-%d %R')" > Release.md
           echo "The release contains the following components:" >> Release.md

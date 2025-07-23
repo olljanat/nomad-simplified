@@ -39,6 +39,5 @@ $env:NOMAD_ADDR="https://127.0.0.1:4646"
 $env:NOMAD_SKIP_VERIFY="true"
 c:\bin\nomad.exe node config -update-servers $serverIP
 
-# Disable IPv6
-Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters -Name DisabledComponents -Value 0xff
+
 Restart-Computer

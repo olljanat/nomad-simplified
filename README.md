@@ -93,7 +93,7 @@ namespace "*" {
 
 ```bash
 nomad acl policy apply -description "CoreDNS integration" integration-coredns read-all.hcl
-nomad acl token create -name="Test app-dev token" -policy=app-dev -type=client
+nomad acl token create -name="CoreDNS integration" -policy=integration-coredns -type=client
 ```
 
 And re-deploy with `COREDNS_NOMAD_TOKEN` configured.

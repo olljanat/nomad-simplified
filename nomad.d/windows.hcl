@@ -1,6 +1,5 @@
 client {
   enabled = true
-  node_class = "windows"
   options {
     "user.denylist" = "ContainerAdministrator"
   }

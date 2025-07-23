@@ -1,5 +1,4 @@
 client {
-  node_class = "linux"
   options {
     "user.denylist" = "root"
   }

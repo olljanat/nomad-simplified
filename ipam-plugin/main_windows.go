@@ -53,7 +53,7 @@ func (p *program) run(debug bool) {
 		InBufferSize:       4096,
 		OutBufferSize:      4096,
 	}
-	if err := p.h.ServeWindows(npipe, "nomad", sdk.WindowsDefaultDaemonRootDir(), &config); err != nil {
+	if err := p.h.ServeWindows(npipe, driverName, sdk.WindowsDefaultDaemonRootDir(), &config); err != nil {
 		logrus.Errorf("Error serving ipam plugin: %v", err)
 	}
 }

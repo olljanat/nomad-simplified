@@ -10,8 +10,9 @@ import (
 )
 
 var (
-	log     = logger()
-	Version string
+	log        = logger()
+	Version    string
+	driverName = "nomad-ipam"
 )
 
 type ipamDriver struct{}

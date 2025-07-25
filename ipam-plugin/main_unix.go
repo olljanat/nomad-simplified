@@ -8,7 +8,7 @@ import (
 )
 
 func serve(h *ipam.Handler) {
-	if err := h.ServeUnix("nomad", 0); err != nil {
+	if err := h.ServeUnix(driverName, 0); err != nil {
 		log.Errorf("Error serving ipam plugin: %v", err)
 	}
 }

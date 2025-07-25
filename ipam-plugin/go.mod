@@ -18,4 +18,4 @@ require (
 	github.com/stretchr/testify v1.10.0 // indirect
 )
 
-replace github.com/docker/go-plugins-helpers v0.0.0-20240701071450-45e2431495c8 => github.com/olljanat/go-plugins-helpers v0.0.0-20250725124147-931e988f1fde
+replace github.com/docker/go-plugins-helpers v0.0.0-20240701071450-45e2431495c8 => github.com/olljanat/go-plugins-helpers v0.0.0-20250725134537-0ba0c5538d85

@@ -46,13 +46,11 @@ func (d *ipamDriver) ReleasePool(r *ipam.ReleasePoolRequest) error {
 }
 
 func (d *ipamDriver) RequestAddress(r *ipam.RequestAddressRequest) (*ipam.RequestAddressResponse, error) {
-	/*
-		if r.Options["RequestAddressType"] == "com.docker.network.gateway" {
-			return &ipam.RequestAddressResponse{Address: r.PoolID}, nil
-		}
-	*/
 	fmt.Printf("RequestAddress, request options: %v\n", r.Options)
-	return &ipam.RequestAddressResponse{Address: "100.64.255.201/24", Data: r.Options}, nil
+	if r.Options["RequestAddressType"] == "com.docker.network.gateway" {
+		return &ipam.RequestAddressResponse{Address: "10.0.0.1/16"}, nil
+	}
+	return &ipam.RequestAddressResponse{Address: "10.0.3.1/16"}, nil
 }
 
 func (d *ipamDriver) ReleaseAddress(r *ipam.ReleaseAddressRequest) error {

@@ -10,8 +10,8 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/docker/go-connections v0.5.0 h1:USnMq7hx7gwdVZq1L49hLXaFtUdTADjXGp+uj1Br63c=
 github.com/docker/go-connections v0.5.0/go.mod h1:ov60Kzw0kKElRwhNs9UlUHAE/F9Fe6GLaXnqyDdmEXc=
-github.com/olljanat/go-plugins-helpers v0.0.0-20250725124147-931e988f1fde h1:22wWdwYwNDXXTqsoM+hLOo6DpuSl+rTJLPaOGhQWijQ=
-github.com/olljanat/go-plugins-helpers v0.0.0-20250725124147-931e988f1fde/go.mod h1:f4sOT/Uv23jZnq9GxL+YrWnsU+B68eug0u9Sy3iUEQA=
+github.com/olljanat/go-plugins-helpers v0.0.0-20250725134537-0ba0c5538d85 h1:PeXgL9ddZyIuhituF3Rvy2vB9c7pSQw5dV0dc/qaq0Q=
+github.com/olljanat/go-plugins-helpers v0.0.0-20250725134537-0ba0c5538d85/go.mod h1:f4sOT/Uv23jZnq9GxL+YrWnsU+B68eug0u9Sy3iUEQA=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 h1:Jamvg5psRIccs7FGNTlIRMkT8wgtp5eCXdBlqhYGL6U=
 github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=

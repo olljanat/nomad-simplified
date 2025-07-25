@@ -4,7 +4,6 @@ package main
 
 import (
 	"io"
-	"path/filepath"
 
 	"github.com/Freman/eventloghook"
 	"github.com/docker/go-plugins-helpers/ipam"
@@ -15,15 +14,7 @@ import (
 )
 
 var (
-	baseDir = filepath.Join(sdk.WindowsDefaultDaemonRootDir(), "secrets")
-	npipe   = "//./pipe/docker-nomad-ipam-plugin"
-
-	// AllowSystemOnly limits pipe access to NT AUTHORITY\SYSTEM
-	AllowSystemOnly = "D:(A;;GA;;;SY)"
-
-	ContainerAdministratorSid = "S-1-5-93-2-1"
-	ContainerUserSid          = "S-1-5-93-2-2"
-
+	npipe       = "//./pipe/docker-nomad-ipam-plugin"
 	ServiceName = "docker-nomad-ipam"
 )
 
@@ -54,7 +45,7 @@ func (p *program) run(debug bool) {
 
 	sd := sdk.AllowServiceSystemAdmin
 	if !debug {
-		sd = AllowSystemOnly
+		sd = sdk.AllowSystemOnly
 	}
 
 	config := sdk.WindowsPipeConfig{

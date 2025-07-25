@@ -9,7 +9,6 @@ import (
 	"github.com/docker/go-plugins-helpers/ipam"
 	"github.com/docker/go-plugins-helpers/sdk"
 	"github.com/freman/eventloghook"
-	"github.com/labstack/gommon/log"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sys/windows/svc"
 	"golang.org/x/sys/windows/svc/eventlog"

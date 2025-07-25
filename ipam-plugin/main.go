@@ -23,7 +23,7 @@ func (d *ipamDriver) GetCapabilities() (*ipam.CapabilitiesResponse, error) {
 	fmt.Printf("GetCapabilities()\n")
 	return &ipam.CapabilitiesResponse{
 		RequiresMACAddress:    false,
-		RequiresRequestReplay: false,
+		RequiresRequestReplay: true,
 	}, nil
 }
 

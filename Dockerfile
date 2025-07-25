@@ -3,12 +3,10 @@ ARG COREDNS_NOMAD_VERSION
 FROM ghcr.io/olljanat/coredns-nomad:v0.1.1-olljanat1 AS coredns
 # FROM ghcr.io/ituoga/coredns-nomad:v${COREDNS_NOMAD_VERSION} AS coredns
 
-# Get latest CA list
-FROM alpine AS ca
-RUN apk add -U --no-cache ca-certificates
-
 # Build target container
-FROM busybox:1.37
+FROM debian:bookworm-slim
+RUN apt-get update \
+    && apt-get install -y ca-certificates curl iproute2 iputils-ping net-tools traceroute unzip
 COPY --from=coredns /coredns /bin/
 RUN mkdir -p /etc/coredns
 COPY /coredns /etc/coredns
@@ -23,9 +21,6 @@ COPY /nomad.d /etc/nomad.d
 
 # Remove Windows specific files
 RUN rm -f /etc/nomad.d/windows.hcl
-
-# Include CA list
-COPY --from=ca /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 # Add client entry script
 COPY /client-entry.sh /bin/

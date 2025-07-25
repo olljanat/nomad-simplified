@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Generate cluster join config for Nomad clients
 export CLUSTER_CONFIG='client {\n  servers = ["'

@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"net"
 	"os"
 
 	"github.com/docker/go-plugins-helpers/ipam"
@@ -20,56 +19,44 @@ type ipamDriver struct{}
 type simpleFormatter struct{}
 
 func (d *ipamDriver) GetCapabilities() (*ipam.CapabilitiesResponse, error) {
-	return &ipam.CapabilitiesResponse{RequiresMACAddress: true}, nil
+	fmt.Printf("GetCapabilities()\n")
+	return &ipam.CapabilitiesResponse{
+		RequiresMACAddress:    false,
+		RequiresRequestReplay: false,
+	}, nil
 }
 
 func (d *ipamDriver) GetDefaultAddressSpaces() (*ipam.AddressSpacesResponse, error) {
+	fmt.Printf("GetDefaultAddressSpaces()\n")
 	return &ipam.AddressSpacesResponse{LocalDefaultAddressSpace: "local",
 		GlobalDefaultAddressSpace: "global"}, nil
 }
 
 func (d *ipamDriver) RequestPool(r *ipam.RequestPoolRequest) (*ipam.RequestPoolResponse, error) {
-	pool := ""
-	if r.V6 {
-		if r.Options["v6subnet"] == "" {
-			return &ipam.RequestPoolResponse{}, errors.New("IPv6 subnet is required")
-		}
-		pool = r.Options["v6subnet"]
-	} else {
-		if r.Pool == "" {
-			return &ipam.RequestPoolResponse{PoolID: "0.0.0.0/32", Pool: "0.0.0.0/32"}, nil
-		}
-		pool = r.Pool
+	fmt.Printf("RequestPool()\n")
+	if r.Pool == "" {
+		return &ipam.RequestPoolResponse{}, errors.New("--subnet parameter is required")
 	}
-
-	_, ipnet, err := net.ParseCIDR(pool)
-	if err != nil {
-		return &ipam.RequestPoolResponse{}, err
-	}
-	mask, _ := ipnet.Mask.Size()
-	if !r.V6 && mask != 32 {
-		return &ipam.RequestPoolResponse{}, errors.New("only subnet mask /32 is supported")
-	}
-	if r.V6 && mask != 128 {
-		return &ipam.RequestPoolResponse{}, errors.New("only subnet mask /128 is supported")
-	}
-
-	return &ipam.RequestPoolResponse{PoolID: pool, Pool: pool}, nil
+	return &ipam.RequestPoolResponse{PoolID: r.Pool, Pool: r.Pool}, nil
 }
 
 func (d *ipamDriver) ReleasePool(r *ipam.ReleasePoolRequest) error {
+	fmt.Printf("ReleasePool()\n")
 	return nil
 }
 
 func (d *ipamDriver) RequestAddress(r *ipam.RequestAddressRequest) (*ipam.RequestAddressResponse, error) {
-	if r.Options["RequestAddressType"] == "com.docker.network.gateway" {
-		return &ipam.RequestAddressResponse{Address: r.PoolID}, nil
-	}
-
-	return &ipam.RequestAddressResponse{Address: r.PoolID}, nil
+	/*
+		if r.Options["RequestAddressType"] == "com.docker.network.gateway" {
+			return &ipam.RequestAddressResponse{Address: r.PoolID}, nil
+		}
+	*/
+	fmt.Printf("RequestAddress, request options: %v\n", r.Options)
+	return &ipam.RequestAddressResponse{Address: "100.64.255.201/24", Data: r.Options}, nil
 }
 
 func (d *ipamDriver) ReleaseAddress(r *ipam.ReleaseAddressRequest) error {
+	fmt.Printf("ReleaseAddress()\n")
 	return nil
 }
 
@@ -84,7 +71,7 @@ func main() {
 	d := &ipamDriver{}
 	h := ipam.NewHandler(d)
 
-	log.Infof("Starting ipam plugin")
+	log.Infof("Starting ipam plugin\n")
 	serve(h)
 
 }

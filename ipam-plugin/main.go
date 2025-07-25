@@ -23,14 +23,6 @@ func (d *ipamDriver) GetCapabilities() (*ipam.CapabilitiesResponse, error) {
 	return &ipam.CapabilitiesResponse{RequiresMACAddress: true}, nil
 }
 
-func (d *ipamDriver) GetNetCapabilities() (*ipam.CapabilitiesResponse, error) {
-	capabilities := &ipam.CapabilitiesResponse{
-		RequiresMACAddress: false,
-	}
-
-	return capabilities, nil
-}
-
 func (d *ipamDriver) GetDefaultAddressSpaces() (*ipam.AddressSpacesResponse, error) {
 	return &ipam.AddressSpacesResponse{LocalDefaultAddressSpace: "local",
 		GlobalDefaultAddressSpace: "global"}, nil
@@ -65,6 +57,10 @@ func (d *ipamDriver) RequestPool(r *ipam.RequestPoolRequest) (*ipam.RequestPoolR
 	return &ipam.RequestPoolResponse{PoolID: pool, Pool: pool}, nil
 }
 
+func (d *ipamDriver) ReleasePool(r *ipam.ReleasePoolRequest) error {
+	return nil
+}
+
 func (d *ipamDriver) RequestAddress(r *ipam.RequestAddressRequest) (*ipam.RequestAddressResponse, error) {
 	if r.Options["RequestAddressType"] == "com.docker.network.gateway" {
 		return &ipam.RequestAddressResponse{Address: r.PoolID}, nil
@@ -74,10 +70,6 @@ func (d *ipamDriver) RequestAddress(r *ipam.RequestAddressRequest) (*ipam.Reques
 }
 
 func (d *ipamDriver) ReleaseAddress(r *ipam.ReleaseAddressRequest) error {
-	return nil
-}
-
-func (d *ipamDriver) ReleasePool(r *ipam.ReleasePoolRequest) error {
 	return nil
 }
 

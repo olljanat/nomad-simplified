@@ -25,6 +25,5 @@ RUN rm -f /etc/nomad.d/windows.hcl
 # Include CA list
 COPY --from=ca /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-# Define entrypoint
-COPY /entrypoint.sh /bin/
-ENTRYPOINT ["/bin/entrypoint.sh"]
+# Add client entry script
+COPY /client-entry.sh /bin/

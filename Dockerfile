@@ -28,4 +28,3 @@ COPY --from=ca /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 # Define entrypoint
 COPY /entrypoint.sh /bin/
 ENTRYPOINT ["/bin/entrypoint.sh"]
-WORKDIR /opt/tls

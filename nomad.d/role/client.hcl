@@ -2,6 +2,10 @@ client {
   enabled = true
 }
 
+consul {
+  client_auto_join = false
+}
+
 server {
   enabled = false
 }

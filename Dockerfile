@@ -16,7 +16,8 @@ COPY /coredns /etc/coredns
 ARG NOMAD_VERSION
 ADD https://github.com/olljanat/nomad/releases/download/v1.10.3-olljanat1/nomad_linux_amd64.zip /tmp/nomad.zip
 RUN mkdir -p /etc/nomad.d /opt/nomad \
-    && unzip -o /tmp/nomad.zip -d /bin
+    && unzip -o /tmp/nomad.zip -d /bin \
+    && chmod 0755 /bin/nomad
 COPY /nomad.d /etc/nomad.d
 
 # Remove Windows specific files

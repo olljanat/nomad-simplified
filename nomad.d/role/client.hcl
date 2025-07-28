@@ -15,3 +15,7 @@ tls {
   cert_file = "/opt/tls/nomad-client.pem"
   key_file = "/opt/tls/nomad-client-key.pem"
 }
+
+ui {
+  enabled = false
+}

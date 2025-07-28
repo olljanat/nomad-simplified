@@ -1,5 +1,6 @@
 client {
   enabled = true
+  client_auto_join = false
 }
 
 server {

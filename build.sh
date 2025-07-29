@@ -16,7 +16,7 @@ docker push $TAG
 
 # Build ZIP files for Windows
 mkdir -p dist/tmp
-wget https://releases.hashicorp.com/nomad/${nomad_version}/nomad_${nomad_version}_windows_amd64.zip -O dist/nomad.zip
+wget https://github.com/olljanat/nomad/releases/download/v1.10.3-olljanat1/nomad_windows_amd64.zip -O dist/nomad.zip
 unzip -o dist/nomad.zip -d dist/tmp/bin/
 rm dist/nomad.zip
 

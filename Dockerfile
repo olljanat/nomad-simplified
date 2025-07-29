@@ -14,7 +14,7 @@ COPY /coredns /etc/coredns
 
 # Add Nomad
 ARG NOMAD_VERSION
-ADD https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip /tmp/nomad.zip
+ADD https://github.com/olljanat/nomad/releases/download/v1.10.3-olljanat1/nomad_linux_amd64.zip /tmp/nomad.zip
 RUN mkdir -p /etc/nomad.d /opt/nomad \
     && unzip -o /tmp/nomad.zip -d /bin \
     && chmod 0755 /bin/nomad

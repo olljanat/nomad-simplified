@@ -1,4 +1,5 @@
 service.nomad.:53 {
+  rewrite stop type AAAA A
   log
   cache
   errors

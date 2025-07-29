@@ -1,3 +1,7 @@
+acl {
+  token_max_expiration_ttl = "720h"
+}
+
 client {
   enabled = false
 }

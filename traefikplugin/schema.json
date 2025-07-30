@@ -1,0 +1,14 @@
+{
+  "^.*-dev$": [
+    {
+      "fieldPath": "TaskGroups[*].Tasks[*].Config.network_mode",
+      "allowedValue": "dev"
+    }
+  ],
+  "^.*-prod$": [
+    {
+      "fieldPath": "TaskGroups[*].Tasks[*].Config.network_mode",
+      "allowedValue": "prod"
+    }
+  ]
+}

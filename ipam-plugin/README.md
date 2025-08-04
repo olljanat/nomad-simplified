@@ -41,11 +41,11 @@ docker network create `
 ```hcl
 name = "example"
 meta {
-  ip_range = "10.0.1.0/24"
+  ip_range_europe1 = "10.0.1.0/24"
 }
 name = "foobar"
 meta {
-  ip_range = "10.0.2.0/24"
+  ip_range_europe1 = "10.0.2.0/24"
 }
 ```
 

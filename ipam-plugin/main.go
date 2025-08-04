@@ -15,6 +15,7 @@ var (
 	log        = logger()
 	Version    string
 	driverName = "nomad-ipam"
+	datacenter string
 )
 
 type ipamDriver struct {
@@ -108,13 +109,14 @@ func (d *ipamDriver) RequestAddress(r *ipam.RequestAddressRequest) (*ipam.Reques
 	if err != nil {
 		return nil, fmt.Errorf("failed to get namespace %s: %v", namespace, err)
 	}
-	ipRange, ok := ns.Meta["ip_range"]
+	fieldName := "ip_range_" + datacenter
+	ipRange, ok := ns.Meta[fieldName]
 	if !ok {
-		return nil, fmt.Errorf("no ip_range metadata found for namespace %s", namespace)
+		return nil, fmt.Errorf("no %s metadata found for namespace %s", fieldName, namespace)
 	}
 	_, ipNet, err = net.ParseCIDR(ipRange)
 	if err != nil {
-		return nil, fmt.Errorf("invalid ip_range format %s in namespace %s: %v", ipRange, namespace, err)
+		return nil, fmt.Errorf("invalid %s format %s in namespace %s: %v", fieldName, ipRange, namespace, err)
 	}
 
 	// Get all jobs in the namespace
@@ -164,6 +166,11 @@ func main() {
 	}
 
 	log.SetFormatter(&simpleFormatter{})
+
+	datacenter = os.Getenv("DATACENTER")
+	if datacenter == "" {
+		log.Fatal("DATACENTER environment variable is required")
+	}
 
 	d, err := NewipamDriver()
 	if err != nil {

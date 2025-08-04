@@ -11,6 +11,9 @@ IPAM plugin for Docker with Nomad integration which allow you to allocate sub-ra
 # Usage
 ## Create network to Docker nodes
 ### Linux
+> [!TIP]
+> Use mode `l2` in on-prem and `l3` in Azure. Look [this](https://blog.cloudtrooper.net/2023/05/10/ipvlan-with-docker-in-azure) for more information.
+
 ```bash
 docker network create \
   --driver ipvlan \
@@ -18,10 +21,13 @@ docker network create \
   --subnet 10.0.0.0/16 \
   --gateway 10.0.0.1 \
   --opt parent=eth0 \
-  --opt ipvlan_mode=l3 \
+  --opt ipvlan_mode=l2 \
   containers
 ```
 ### Windows
+> [!TIP]
+> Use driver `transparent` in on-prem and `l2bridge` in Azure.
+
 ```powershell
 docker network create `
   --driver transparent `

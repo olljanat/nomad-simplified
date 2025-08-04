@@ -64,3 +64,35 @@ job "test" {
   }
 }
 ```
+
+# Installation
+## Windows
+```powershell
+# Copy binary and create service
+Copy-Item -Path docker-ipam-plugin-nomad.exe -Destination "C:\Program Files\docker"
+New-Service -Name "docker-ipam-nomad" -DisplayName "IPAM plugin for Docker with Nomad integration" `
+  -BinaryPathName "C:\Program Files\docker\docker-ipam-plugin-nomad.exe" -StartupType Automatic
+
+# Register eventlog handler
+$log = "HKLM:\SYSTEM\CurrentControlSet\Services\EventLog\Application\docker-ipam-nomad"
+New-Item -Path $log -Force
+Set-ItemProperty -Path $log -Name CustomSource -Value 1
+Set-ItemProperty -Path $log -Name EventMessageFile -Value "%SystemRoot%\System32\EventCreate.exe"
+Set-ItemProperty -Path $log -Name TypesSupported -Value 7
+
+# Make Docker service depend on of plugin service
+## Please note that you need reboot server before this is effective.
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\docker" `
+  -Name DependOnService -Type MultiString -Value @("hns","vmcompute","docker-ipam-nomad")
+
+# Add environment variable for service
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\docker-ipam-nomad" `
+  -Name Environment `
+  -Type MultiString `
+  -Value @(
+    "DATACENTER=europe1",
+    "NOMAD_ADDR=http://127.0.0.1:4646",
+    "NOMAD_SKIP_VERIFY=true",
+    "NOMAD_TOKEN=abc123"
+)
+```

@@ -32,6 +32,7 @@ services:
       SERVER1: ${SERVER1}
       SERVER2: ${SERVER2}
       SERVER3: ${SERVER3}
+      DOMAIN: service.nomad
     network_mode: host
     uts: host
     pid: host

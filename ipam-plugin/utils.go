@@ -10,30 +10,38 @@ func (f *simpleFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	return []byte(entry.Message + "\n"), nil
 }
 
-func findFirstFreeIP(ipNet *net.IPNet, usedIPs map[rune]bool) string {
-	network := ipNet.IP
-	ones, _ := ipNet.Mask.Size()
-	numIPs := uint32(1) << (32 - ones)
-	if numIPs == 0 {
-		return ""
+// findFirstFreeIP finds the first available IP in the given subnet, excluding used IPs
+func findFirstFreeIP(ipNet *net.IPNet, usedIPs map[string]bool) string {
+	ip := ipNet.IP.Mask(ipNet.Mask)
+	// Increment to skip network address
+	for i := 0; i < 1; i++ {
+		ip = incrementIP(ip)
 	}
-	for i := uint32(0); i < numIPs; i++ {
-		ip := incrementIP(network, i)
+
+	// Iterate through the subnet to find a free IP
+	for ipNet.Contains(ip) {
 		ipStr := ip.String()
-		if !usedIPs[[]rune(ipStr)[0]] {
+		if !usedIPs[ipStr] {
 			return ipStr
 		}
+		ip = incrementIP(ip)
 	}
 	return ""
 }
 
-func incrementIP(base net.IP, n uint32) net.IP {
-	ip := make(net.IP, len(base))
-	copy(ip, base)
-	for i := len(ip) - 1; i >= 0 && n > 0; i-- {
-		num := uint32(ip[i]) + (n & 0xff)
-		ip[i] = byte(num & 0xff)
-		n >>= 8
+// incrementIP increments an IPv4 address by 1
+func incrementIP(ip net.IP) net.IP {
+	ip = ip.To4()
+	if ip == nil {
+		return nil
 	}
-	return ip
+	newIP := make(net.IP, 4)
+	copy(newIP, ip)
+	for i := len(newIP) - 1; i >= 0; i-- {
+		newIP[i]++
+		if newIP[i] != 0 {
+			break
+		}
+	}
+	return newIP
 }

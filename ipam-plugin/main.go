@@ -62,12 +62,14 @@ func (d *ipamDriver) ReleasePool(r *ipam.ReleasePoolRequest) error {
 }
 
 func (d *ipamDriver) RequestAddress(r *ipam.RequestAddressRequest) (*ipam.RequestAddressResponse, error) {
+	// Determine subnet mask from PoolID
 	mask := 32
 	_, ipNet, err := net.ParseCIDR(r.PoolID)
 	if err == nil {
 		mask, _ = ipNet.Mask.Size()
 	}
 
+	// Handle gateway address request
 	if r.Options["RequestAddressType"] == "com.docker.network.gateway" {
 		if r.Address == "" {
 			return &ipam.RequestAddressResponse{}, errors.New("--gateway parameter is required")
@@ -119,15 +121,39 @@ func (d *ipamDriver) RequestAddress(r *ipam.RequestAddressRequest) (*ipam.Reques
 		return nil, fmt.Errorf("invalid %s format %s in namespace %s: %v", fieldName, ipRange, namespace, err)
 	}
 
-	// Get all jobs in the namespace
+	// Get all nodes to map NodeID to datacenter
+	nodesAPI := d.nomadClient.Nodes()
+	nodes, _, err := nodesAPI.List(&api.QueryOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to list nodes: %v", err)
+	}
+	nodeDatacenter := ""
+	for _, node := range nodes {
+		if node.ID == alloc.NodeID {
+			nodeInfo, _, err := nodesAPI.Info(node.ID, &api.QueryOptions{})
+			if err != nil {
+				log.Printf("Failed to get node info for %s: %v", node.ID, err)
+				continue
+			}
+			nodeDatacenter = nodeInfo.Datacenter
+			break
+		}
+	}
+	if nodeDatacenter == "" {
+		return nil, fmt.Errorf("could not determine datacenter for node %s", alloc.NodeID)
+	}
+	if nodeDatacenter != datacenter {
+		return nil, fmt.Errorf("allocation %s is in datacenter %s, but plugin is configured for %s", allocID, nodeDatacenter, datacenter)
+	}
+
+	// Collect IPs used by allocations in the namespace and datacenter
+	usedIPs := make(map[string]bool)
 	jobsAPI := d.nomadClient.Jobs()
 	jobs, _, err := jobsAPI.List(&api.QueryOptions{Namespace: namespace})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list jobs in namespace %s: %v", namespace, err)
 	}
 
-	// Collect IPs used by allocations
-	usedIPs := make(map[rune]bool)
 	for _, jobStub := range jobs {
 		allocs, _, err := d.nomadClient.Jobs().Allocations(jobStub.ID, false, &api.QueryOptions{Namespace: namespace})
 		if err != nil {
@@ -135,19 +161,45 @@ func (d *ipamDriver) RequestAddress(r *ipam.RequestAddressRequest) (*ipam.Reques
 			continue
 		}
 		for _, alloc := range allocs {
+			// Check if allocation is in the current datacenter by NodeID
+			allocNodeDatacenter := ""
+			for _, node := range nodes {
+				if node.ID == alloc.NodeID {
+					nodeInfo, _, err := nodesAPI.Info(node.ID, &api.QueryOptions{})
+					if err != nil {
+						log.Printf("Failed to get node info for %s: %v", node.ID, err)
+						continue
+					}
+					allocNodeDatacenter = nodeInfo.Datacenter
+					break
+				}
+			}
+			if allocNodeDatacenter != datacenter {
+				continue
+			}
 			if alloc.AllocatedResources != nil && alloc.AllocatedResources.Shared.Networks != nil {
 				for _, network := range alloc.AllocatedResources.Shared.Networks {
-					for _, ip := range network.IP {
-						usedIPs[ip] = true
+					// Convert []rune to string and validate
+					for _, ipRunes := range network.IP {
+						ip := string(ipRunes)
+						if ip != "" {
+							// Validate that it's a valid IP address
+							if net.ParseIP(ip) == nil {
+								log.Printf("Invalid IP address format: %s", ip)
+								continue
+							}
+							usedIPs[ip] = true
+						}
 					}
 				}
 			}
 		}
 	}
 
+	// Find a free IP in the subnet
 	freeIP := findFirstFreeIP(ipNet, usedIPs)
 	if freeIP == "" {
-		return nil, fmt.Errorf("no free IP found in ip_range %s for namespace %s", ipRange, namespace)
+		return nil, fmt.Errorf("no free IP found in ip_range %s for namespace %s in datacenter %s", ipRange, namespace, datacenter)
 	}
 
 	return &ipam.RequestAddressResponse{

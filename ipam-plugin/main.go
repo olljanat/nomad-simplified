@@ -167,9 +167,9 @@ func main() {
 
 	log.SetFormatter(&simpleFormatter{})
 
-	datacenter = os.Getenv("DATACENTER")
+	datacenter = os.Getenv("NOMAD_DATACENTER")
 	if datacenter == "" {
-		log.Fatal("DATACENTER environment variable is required")
+		log.Fatal("NOMAD_DATACENTER environment variable is required")
 	}
 
 	d, err := NewipamDriver()
@@ -178,6 +178,6 @@ func main() {
 	}
 	h := ipam.NewHandler(d)
 
-	log.Infof("Starting ipam plugin\n")
+	log.Infof("Starting Nomad IPAM plugin\n")
 	serve(h)
 }

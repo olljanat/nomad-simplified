@@ -18,12 +18,12 @@ docker plugin rm $ORG/docker-ipam-nomad:v$VERSION
 mkdir -p rootfs
 mkdir -p rootfs/etc/ssl/certs/
 cp /etc/ssl/certs/ca-certificates.crt rootfs/etc/ssl/certs/
-CGO_ENABLED=0 go build -a -tags netgo -ldflags "${LDFLAGS_STRING}"
+CGO_ENABLED=0 go build -a -tags netgo -ldflags "${LDFLAGS_STRING}" -o docker-ipam-nomad
 cp docker-ipam-nomad rootfs/
 
 docker plugin create $ORG/docker-ipam-nomad:v$VERSION .
-# docker plugin push $ORG/docker-ipam-nomad:v$VERSION
+docker plugin push $ORG/docker-ipam-nomad:v$VERSION
 
 docker plugin rm $ORG/docker-ipam-nomad:v$VERSION
 
-GOOS=windows go build -ldflags "${LDFLAGS_STRING}"
+GOOS=windows go build -ldflags "${LDFLAGS_STRING}" -o docker-ipam-nomad.exe

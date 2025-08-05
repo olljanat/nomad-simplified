@@ -1,7 +1,7 @@
 # About
 IPAM plugin for Docker with Nomad integration which allow you to allocate sub-ranges for Nomad namespaces like `--ip-range` option works in [docker network create](https://docs.docker.com/reference/cli/docker/network/create/) command.
 
-> [!WARNING]  
+> [!WARNING]
 > This requires Docker version containing: https://github.com/moby/moby/pull/50586
 
 > [!CAUTION]
@@ -66,12 +66,26 @@ job "test" {
 ```
 
 # Installation
+## Linux
+```bash
+docker plugin install \
+  --grant-all-permissions \
+  ollijanatuinen/docker-ipam-nomad:v0.1 \
+  NOMAD_ADDR="http://127.0.0.1:4646" \
+  NOMAD_DATACENTER="europe1" \
+  NOMAD_TOKEN="abc123" \
+  NOMAD_SKIP_VERIFY="true"
+```
+
+> [!WARNING]
+> It seems to be that because of Docker limitations, using of `--alias` parameter when installing IPAM plugins will result to error message `invalid ipam driver`
+
 ## Windows
 ```powershell
 # Copy binary and create service
-Copy-Item -Path docker-ipam-plugin-nomad.exe -Destination "C:\Program Files\docker"
+Copy-Item -Path docker-ipam-nomad.exe -Destination "C:\Program Files\docker"
 New-Service -Name "docker-ipam-nomad" -DisplayName "IPAM plugin for Docker with Nomad integration" `
-  -BinaryPathName "C:\Program Files\docker\docker-ipam-plugin-nomad.exe" -StartupType Automatic
+  -BinaryPathName "C:\Program Files\docker\docker-ipam-nomad.exe" -StartupType Automatic
 
 # Register eventlog handler
 $log = "HKLM:\SYSTEM\CurrentControlSet\Services\EventLog\Application\docker-ipam-nomad"

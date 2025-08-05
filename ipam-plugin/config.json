@@ -1,0 +1,54 @@
+{
+    "description": "IPAM plugin for Docker with Nomad integration",
+    "documentation": "https://github.com/olljanat/nomad-simplified/tree/main/ipam-plugin",
+    "entrypoint": [
+        "/docker-ipam-nomad"
+    ],
+    "env": [
+        {
+            "description": "Nomad address",
+            "name": "NOMAD_ADDR",
+            "settable": [
+                "value"
+            ],
+            "value": ""
+        },
+        {
+            "description": "Nomad datacenter",
+            "name": "NOMAD_DATACENTER",
+            "settable": [
+                "value"
+            ],
+            "value": ""
+        },
+        {
+            "description": "Nomad token",
+            "name": "NOMAD_TOKEN",
+            "settable": [
+                "value"
+            ],
+            "value": ""
+        },
+        {
+            "description": "Skip TLS verify",
+            "name": "NOMAD_SKIP_VERIFY",
+            "settable": [
+                "value"
+            ],
+            "value": "false"
+        }
+    ],
+    "interface": {
+        "socket": "/nomad-ipam.sock",
+        "types": [
+            "docker.ipamdriver/1.0"
+        ]
+    },
+    "linux": {
+        "capabilities": []
+    },
+    "mounts": [],
+    "network": {
+        "type": "host"
+    }
+}

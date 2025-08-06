@@ -5,7 +5,7 @@ FROM ghcr.io/ituoga/coredns-nomad:v${COREDNS_NOMAD_VERSION} AS coredns
 # Build target container
 FROM debian:bookworm-slim
 RUN apt-get update \
-    && apt-get install -y ca-certificates curl iputils-ping net-tools traceroute
+    && apt-get install -y ca-certificates curl iputils-ping net-tools traceroute unzip
 COPY --from=coredns /coredns /bin/
 RUN mkdir -p /etc/coredns
 COPY /coredns /etc/coredns

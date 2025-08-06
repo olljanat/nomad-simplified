@@ -26,7 +26,6 @@ server {
 }
 
 tls {
-  http = false
   ca_file = "c:\\opt\\tls\\nomad-agent-ca.pem"
   cert_file = "c:\\opt\\tls\\nomad-client.pem"
   key_file = "c:\\opt\\tls\\nomad-client-key.pem"

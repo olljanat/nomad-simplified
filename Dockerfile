@@ -3,8 +3,9 @@ ARG COREDNS_NOMAD_VERSION
 FROM ghcr.io/ituoga/coredns-nomad:v${COREDNS_NOMAD_VERSION} AS coredns
 
 # Build target container
-FROM alpine:3.21
-RUN apk add -U --no-cache bash ca-certificates curl gcompat inetutils-telnet
+FROM debian:bookworm-slim
+RUN apt-get update \
+    && apt-get install -y ca-certificates curl iputils-ping net-tools traceroute
 COPY --from=coredns /coredns /bin/
 RUN mkdir -p /etc/coredns
 COPY /coredns /etc/coredns

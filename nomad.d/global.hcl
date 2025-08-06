@@ -40,7 +40,7 @@ telemetry {
 }
 
 tls {
-  http = true
   rpc = true
-  verify_server_hostname = false
+  verify_https_client = false
+  verify_server_hostname = true
 }

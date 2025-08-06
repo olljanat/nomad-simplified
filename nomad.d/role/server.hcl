@@ -12,6 +12,7 @@ server {
 }
 
 tls {
+  http = true
   ca_file = "/opt/tls/nomad-agent-ca.pem"
   cert_file = "/opt/tls/nomad-server.pem"
   key_file = "/opt/tls/nomad-server-key.pem"

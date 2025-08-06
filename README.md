@@ -72,6 +72,7 @@ export REGION="europe"
 export DATACENTER="europe-1"
 export NOMAD_NODE_NUM="1"
 export COREDNS_NOMAD_TOKEN=""
+export COREDNS_PREFER_CIDR="10.10.10.0/24"
 
 docker compose -p nomad up -d
 ```

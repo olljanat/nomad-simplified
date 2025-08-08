@@ -1,7 +1,11 @@
 #!/bin/bash
 
+# Configure advertise and bind addresses so we don't need publish HTTP port from clients
+export CLUSTER_CONFIG='advertise {\n  http = "'$NODE_IP'"\n}\n'
+export CLUSTER_CONFIG=$CLUSTER_CONFIG'bind_addr = "'$NODE_IP'"\n'
+
 # Generate cluster join config for Nomad clients
-export CLUSTER_CONFIG='client {\n  servers = ["'
+export CLUSTER_CONFIG=$CLUSTER_CONFIG'client {\n  servers = ["'
 export FIRST_SERVER=true
 if [[ -n "$SERVER1" ]]; then
   export CLUSTER_CONFIG=$CLUSTER_CONFIG$SERVER1

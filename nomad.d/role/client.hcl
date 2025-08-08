@@ -1,10 +1,18 @@
-client {
-  enabled = true
+addresses {
+  http = "127.0.0.1"
 }
 
-consul {
-  client_auto_join = false
+client {
+  enabled = true
+  drain_on_shutdown {
+    deadline = "2m"
+    force = true
+    ignore_system_jobs = true
+  }
 }
+
+leave_on_interrupt = true
+leave_on_terminate = true
 
 server {
   enabled = false

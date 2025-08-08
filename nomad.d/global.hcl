@@ -9,6 +9,10 @@ client {
   }
 }
 
+consul {
+  client_auto_join = false
+}
+
 disable_update_check = true
 
 plugin "docker" {

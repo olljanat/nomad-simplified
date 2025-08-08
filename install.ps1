@@ -30,13 +30,9 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\S
 
 # Update environment variables
 [Environment]::SetEnvironmentVariable("PATH", "$env:PATH;c:\bin", "Machine")
-[Environment]::SetEnvironmentVariable("NOMAD_ADDR", "https://127.0.0.1:4646", "Machine")
-[Environment]::SetEnvironmentVariable("NOMAD_SKIP_VERIFY", "true", "Machine")
 
 # Start Nomad service and register to server
 Start-Service -Name nomad
-$env:NOMAD_ADDR="https://127.0.0.1:4646"
-$env:NOMAD_SKIP_VERIFY="true"
 c:\bin\nomad.exe node config -update-servers $serverIP
 
 

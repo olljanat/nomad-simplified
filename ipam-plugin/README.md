@@ -107,9 +107,7 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\docker-ipam-noma
   -Name Environment `
   -Type MultiString `
   -Value @(
-    "DATACENTER=europe1",
-    "NOMAD_ADDR=http://127.0.0.1:4646",
-    "NOMAD_SKIP_VERIFY=true",
+    "NOMAD_DATACENTER=europe1",
     "NOMAD_TOKEN=abc123"
 )
 ```

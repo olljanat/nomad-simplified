@@ -28,4 +28,14 @@ export CLUSTER_CONFIG=$CLUSTER_CONFIG'"]\n}'
 export NOMAD_CLUSTER="$NOMAD_CLUSTER    $CLUSTER_CONFIG"
 echo -e "$CLUSTER_CONFIG" | tee /etc/nomad.d/cluster.hcl
 
-$@
+$@ &
+child_pid=$!
+
+cleanup() {
+  echo "Caught SIGINT. Forwarding to child process $child_pid..."
+  kill -2 "$child_pid"
+}
+
+trap cleanup INT
+wait "$child_pid"
+exit $?

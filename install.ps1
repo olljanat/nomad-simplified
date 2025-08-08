@@ -11,13 +11,10 @@ Invoke-WebRequest $url -UseBasicParsing -OutFile "C:\Windows\Temp\nomad-simplifi
 Expand-Archive -Path "C:\Windows\Temp\nomad-simplified.zip" -DestinationPath "C:\" -Force
 Remove-Item "C:\Windows\Temp\nomad-simplified.zip" -Force
 
-# Trust CA certificates
-Import-Certificate -FilePath 'c:\opt\tls\nomad-agent-ca.pem' -CertStoreLocation cert:LocalMachine\Root
-
 # Register service
 New-Service -Name "nomad" `
   -DisplayName "HashiCorp Nomad" `
-  -BinaryPathName "c:\bin\nomad.exe agent -client -config c:\etc\nomad.d -region=$region -dc=$datacenter -node-pool=$version" `
+  -BinaryPathName "c:\bin\nomad.exe agent -client -config c:\etc\nomad.d -region=$region -dc=$datacenter -node-pool=windows" `
   -StartupType Automatic
 
 # Make Nomad service depend on of Docker service
@@ -31,9 +28,5 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\S
 # Update environment variables
 [Environment]::SetEnvironmentVariable("PATH", "$env:PATH;c:\bin", "Machine")
 
-# Start Nomad service and register to server
-Start-Service -Name nomad
-c:\bin\nomad.exe node config -update-servers $serverIP
 
-
-Restart-Computer
+# TODO: Add configs and certs here!!!

@@ -1,3 +1,7 @@
+addresses {
+  http = "127.0.0.1"
+}
+
 client {
   enabled = true
   options {

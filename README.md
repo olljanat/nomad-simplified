@@ -10,6 +10,7 @@ Design pricipals:
 * Non-overlay networking with `ipvlan` (Linux) and `transparent` (Windows) Docker drivers.
   * IP management handled with [IPAM plugin for Docker with Nomad integration](/ipam-plugin)
 * Service discovery with [CoreDNS plugin for Hashicorp Nomad](https://github.com/ituoga/coredns-nomad)
+  * Minimize network latency by using `loadbalance` plugin with [prefer](https://github.com/coredns/coredns/pull/7433) option.
 * [Manual clustering](https://developer.hashicorp.com/nomad/docs/deploy/clusters/connect-nodes#manual-clustering)
 
 # Preparation

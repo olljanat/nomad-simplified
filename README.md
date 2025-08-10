@@ -5,6 +5,7 @@ Design pricipals:
 * Keep it simple.
   * Completely avoid need of Consul.
   * Support only Docker tasks.
+  * Avoid need of load balancers.
 * Unify between Linux and Windows as much as possible
 * Non-overlay networking with `ipvlan` (Linux) and `transparent` (Windows) Docker drivers.
   * IP management handled with [IPAM plugin for Docker with Nomad integration](/ipam-plugin)

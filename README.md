@@ -3,10 +3,13 @@ Simplified Nomad setup for Linux + Windows.
 
 Design pricipals:
 * Keep it simple.
+  * Completely avoid need of Consul.
+  * Support only Docker tasks.
 * Unify between Linux and Windows as much as possible
+* Non-overlay networking with `ipvlan` (Linux) and `transparent` (Windows) Docker drivers.
+  * IP management handled with [IPAM plugin for Docker with Nomad integration](/ipam-plugin)
+* Service discovery with [CoreDNS plugin for Hashicorp Nomad](https://github.com/ituoga/coredns-nomad)
 * [Manual clustering](https://developer.hashicorp.com/nomad/docs/deploy/clusters/connect-nodes#manual-clustering)
-
-Images are published in Docker Hub repo [ollijanatuinen/hashistack-simplified](https://hub.docker.com/r/ollijanatuinen/hashistack-simplified)
 
 # Preparation
 ## TLS

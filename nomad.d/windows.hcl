@@ -18,7 +18,10 @@ log_rotate_duration = "24h"
 log_rotate_max_files = 100
 
 plugin "docker" {
+
   config {
+    pull_activity_timeout = "15m"
+
     # Make sure that ContainerAdmin cannot be used
     # https://github.com/hashicorp/nomad/pull/23443
     windows_allow_insecure_container_admin = false

@@ -5,6 +5,7 @@ addresses {
 client {
   enabled = true
   options {
+    "docker.cleanup.image" = "false"
     "user.denylist" = "ContainerAdministrator"
   }
 }

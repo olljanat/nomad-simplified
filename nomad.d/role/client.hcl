@@ -4,15 +4,7 @@ addresses {
 
 client {
   enabled = true
-  drain_on_shutdown {
-    deadline = "2m"
-    force = true
-    ignore_system_jobs = true
-  }
 }
-
-leave_on_interrupt = true
-leave_on_terminate = true
 
 server {
   enabled = false

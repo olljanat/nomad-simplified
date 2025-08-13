@@ -5,7 +5,6 @@ addresses {
 client {
   enabled = true
   options {
-    "docker.cleanup.image" = "false"
     "user.denylist" = "ContainerAdministrator"
   }
 }
@@ -21,6 +20,20 @@ log_rotate_max_files = 100
 plugin "docker" {
 
   config {
+    # Make garbage collector less agressive
+    gc {
+      container = false
+      dangling_containers {
+        creation_grace = "30m"
+        enabled = true
+        period = "2h"
+      }
+
+      # Completely disable image cleanup in Windows
+      # these images are big and slow to download again
+      image = false
+    }
+
     pull_activity_timeout = "15m"
 
     # Make sure that ContainerAdmin cannot be used

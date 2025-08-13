@@ -22,18 +22,6 @@ plugin "docker" {
     volumes {
       enabled = false
     }
-
-    # Make garbage collector less agressive
-    gc {
-      container = false
-      dangling_containers {
-        creation_grace = "30m"
-        enabled = true
-        period = "2h"
-      }
-      image = true
-      image_delay = "24h"
-    }
   }
 }
 

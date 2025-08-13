@@ -28,7 +28,14 @@ func findFirstFreeIP(ipNet *net.IPNet, usedIPs map[string]bool) string {
 		}
 		ipStr := ip.String()
 		if !usedIPs[ipStr] {
-			return ipStr
+
+			// Verify that IP is not already used locally
+			usedLocalIPsLock.RLock()
+			usedLocally := usedLocalIPs[ipStr]
+			usedLocalIPsLock.RUnlock()
+			if !usedLocally {
+				return ipStr
+			}
 		}
 		ip = incrementIP(ip)
 		if ip == nil {

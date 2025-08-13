@@ -73,7 +73,7 @@ job "test" {
 ```bash
 docker plugin install \
   --grant-all-permissions \
-  ollijanatuinen/docker-ipam-nomad:v0.5 \
+  ollijanatuinen/docker-ipam-nomad:v0.6 \
   NOMAD_ADDR="http://127.0.0.1:4646" \
   NOMAD_DATACENTER="europe1" \
   NOMAD_TOKEN="abc123" \

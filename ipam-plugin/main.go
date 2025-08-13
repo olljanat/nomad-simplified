@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/docker/go-plugins-helpers/ipam"
 	"github.com/hashicorp/nomad/api"
@@ -16,6 +17,10 @@ var (
 	Version    string
 	driverName = "nomad-ipam"
 	datacenter string
+
+	// Keep track of used IPs in this node
+	usedLocalIPs     = make(map[string]bool)
+	usedLocalIPsLock sync.RWMutex
 )
 
 type ipamDriver struct {
@@ -146,12 +151,21 @@ func (d *ipamDriver) RequestAddress(r *ipam.RequestAddressRequest) (*ipam.Reques
 		return nil, fmt.Errorf("no free IP found in ip_range %s for namespace %s in datacenter %s", ipRange, alloc.Namespace, datacenter)
 	}
 
+	usedLocalIPsLock.Lock()
+	usedLocalIPs[freeIP] = true
+	usedLocalIPsLock.Unlock()
+
 	return &ipam.RequestAddressResponse{
 		Address: fmt.Sprintf("%s/%d", freeIP, mask),
 	}, nil
 }
 
 func (d *ipamDriver) ReleaseAddress(r *ipam.ReleaseAddressRequest) error {
+
+	usedLocalIPsLock.Lock()
+	usedLocalIPs[r.Address] = false
+	usedLocalIPsLock.Unlock()
+
 	return nil
 }
 

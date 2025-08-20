@@ -1,12 +1,13 @@
 # Add CoreDNS with Nomad integration support
 ARG COREDNS_NOMAD_VERSION
 FROM ghcr.io/olljanat/coredns-nomad:v0.1.1-olljanat1 AS coredns
+# FROM ollijanatuinen/coredns:amd64-v20250820-1 AS coredns
 # FROM ghcr.io/ituoga/coredns-nomad:v${COREDNS_NOMAD_VERSION} AS coredns
 
 # Build target container
 FROM debian:bookworm-slim
 RUN apt-get update \
-    && apt-get install -y ca-certificates curl iproute2 iputils-ping net-tools traceroute unzip
+    && apt-get install -y ca-certificates curl iproute2 iputils-ping net-tools traceroute unzip wget
 COPY --from=coredns /coredns /bin/
 RUN mkdir -p /etc/coredns
 COPY /coredns /etc/coredns

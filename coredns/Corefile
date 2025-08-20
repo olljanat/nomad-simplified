@@ -18,3 +18,7 @@
   errors
   forward . 127.0.0.11
 }
+
+health :8080 {
+  lameduck 1s
+}

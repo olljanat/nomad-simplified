@@ -17,6 +17,16 @@ services:
     ipc: host
     privileged: true
     restart: always
+    healthcheck:
+      test:
+      - CMD
+      - /bin/sh
+      - -c
+      - wget --no-check-certificate -O - -q "https://${NOMAD_NODE_IP}:4646/v1/agent/health" | grep -q '{"server":{"message":"ok","ok":true}}'
+      interval: 5s
+      timeout: 1s
+      retries: 1
+      start_period: 30s
 
     # Trigger graceful shutdown with SIGINT which Nomad agent is listening
     # and give it 5 minutes handle active connections before killing container
@@ -45,6 +55,21 @@ services:
     ipc: host
     privileged: true
     restart: always
+    healthcheck:
+      test:
+      - CMD
+      - /bin/sh
+      - -c
+      - wget -O - -q "http://127.0.0.1:8080/health" | grep -q 'OK'
+      interval: 5s
+      timeout: 1s
+      retries: 1
+      start_period: 30s
+
+    # Trigger graceful shutdown with SIGINT which CoreDNS is listening
+    # and give it 1 minute handle active connections before killing container
+    stop_grace_period: 1m
+    stop_signal: SIGINT
 
 volumes:
   nomad:

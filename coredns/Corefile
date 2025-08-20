@@ -4,7 +4,6 @@
   cache
   errors
   nomad {
-    zone service.nomad
     address https://{$SERVER3}:4646 https://{$SERVER2}:4646 https://{$SERVER1}:4646
     ttl 10
   }
@@ -17,4 +16,7 @@
   cache
   errors
   forward . 127.0.0.11
+}
+
+health :8080 {
 }

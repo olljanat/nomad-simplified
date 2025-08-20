@@ -1,8 +1,11 @@
 {$DOMAIN}.:53 {
+  errors
+  health :8080 {
+    lameduck 1s
+  }
   rewrite stop type AAAA A
   log
   cache
-  errors
   nomad {
     zone service.nomad
     address https://{$SERVER3}:4646 https://{$SERVER2}:4646 https://{$SERVER1}:4646

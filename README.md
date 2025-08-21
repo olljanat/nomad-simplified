@@ -1,7 +1,7 @@
 # Nomad simplified
 Simplified Nomad setup for Linux + Windows.
 
-Design pricipals:
+Design principals:
 * Keep it simple.
   * Completely avoid need of Consul.
   * Support only Docker tasks.

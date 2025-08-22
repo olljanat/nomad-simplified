@@ -5,7 +5,7 @@ on:
     inputs:
       nomad_version:
         description: 'Nomad version ( https://releases.hashicorp.com/nomad/ )'
-        default: '1.10.3'
+        default: '1.10.4'
         required: true
       coredns_nomad_version:
         description: 'CoreDNS Nomad version ( https://github.com/ituoga/coredns-nomad/pkgs/container/coredns-nomad )'

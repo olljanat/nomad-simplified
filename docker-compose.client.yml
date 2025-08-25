@@ -20,7 +20,7 @@ services:
       - CMD
       - /bin/sh
       - -c
-      - wget --no-check-certificate -O - -q "http://127.0.0.1:4646/v1/agent/health" | grep -q '{"client":{"message":"ok","ok":true}}'
+      - wget -O - -q "http://127.0.0.1:4646/v1/agent/health" | grep -q '{"client":{"message":"ok","ok":true}}'
       interval: 5s
       timeout: 3s
       retries: 1

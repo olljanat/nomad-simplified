@@ -4,9 +4,6 @@ addresses {
 
 client {
   enabled = true
-  options {
-    "user.denylist" = "ContainerAdministrator"
-  }
 }
 
 data_dir = "c:\\opt\\nomad\\data"
@@ -33,12 +30,7 @@ plugin "docker" {
       # these images are big and slow to download again
       image = false
     }
-
     pull_activity_timeout = "15m"
-
-    # Make sure that ContainerAdmin cannot be used
-    # https://github.com/hashicorp/nomad/pull/23443
-    windows_allow_insecure_container_admin = false
   }
 }
 
@@ -47,7 +39,6 @@ server {
 }
 
 tls {
-  http = false
   ca_file = "c:\\opt\\tls\\nomad-agent-ca.pem"
   cert_file = "c:\\opt\\tls\\nomad-client.pem"
   key_file = "c:\\opt\\tls\\nomad-client-key.pem"

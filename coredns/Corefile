@@ -8,7 +8,7 @@
   cache
   nomad {
     zone service.nomad
-    address https://{$SERVER3}:4646 https://{$SERVER2}:4646 https://{$SERVER1}:4646
+    address http://127.0.0.1:4646
     ttl 10
   }
   loadbalance {

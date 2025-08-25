@@ -4,8 +4,6 @@ services:
     container_name: nomad${NOMAD_NODE_NUM}
     hostname: nomad${NOMAD_NODE_NUM}
     command: nomad agent -server -config=/etc/nomad.d -config=/etc/nomad.d/role/server.hcl -bind=${NODE_IP} -region=${REGION} -dc=${DATACENTER}
-    # entrypoint: /bin/client-entry.sh
-    # command: nomad agent -client -config=/etc/nomad.d -config=/etc/nomad.d/role/client.hcl -region=${REGION} -dc=${DATACENTER} -node-pool=${NODE_POOL}
     environment:
       NODE_IP: ${NODE_IP}
       SERVER1: ${SERVER1}

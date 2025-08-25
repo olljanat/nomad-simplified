@@ -1,0 +1,46 @@
+services:
+  nomad:
+    image: ghcr.io/olljanat/nomad-simplified:${VERSION}
+    container_name: nomad-client
+    entrypoint: /bin/client-entry.sh
+    command: nomad agent -client -config=/etc/nomad.d -config=/etc/nomad.d/role/client.hcl -region=${REGION} -dc=${DATACENTER} -node-pool=linux
+    environment:
+      NODE_IP: ${NODE_IP}
+      SERVER1: ${SERVER1}
+      SERVER2: ${SERVER2}
+      SERVER3: ${SERVER3}
+    uts: host
+    pid: host
+    ipc: host
+    privileged: true
+    network_mode: host
+    restart: always
+    healthcheck:
+      test:
+      - CMD
+      - /bin/sh
+      - -c
+      - wget --no-check-certificate -O - -q "http://127.0.0.1:4646/v1/agent/health" | grep -q '{"client":{"message":"ok","ok":true}}'
+      interval: 5s
+      timeout: 3s
+      retries: 1
+      start_period: 30s
+
+    # Trigger graceful shutdown with SIGINT which Nomad agent is listening
+    # and give it 5 minutes handle active connections before killing container
+    stop_grace_period: 5m
+    stop_signal: SIGINT
+
+    volumes:
+    - type: bind
+      source: /opt/nomad
+      target: /opt/nomad
+      bind:
+        propagation: rshared
+    - type: bind
+      source: /etc/nomad/tls
+      target: /opt/tls
+    - /dev:/dev
+    - /proc:/proc
+    - /sys:/sys
+    - /var/run/docker.sock:/var/run/docker.sock:ro

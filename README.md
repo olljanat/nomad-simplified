@@ -17,7 +17,7 @@ Design principals:
 ## TLS
 As first step, you should generate [TLS certificates](https://developer.hashicorp.com/nomad/docs/secure/traffic/tls)
 ```bash
-export VERSION="20250723-linux-2"
+export VERSION="20250822-02"
 export REGION="europe"
 
 # Create certificate authority which is valid 20 years
@@ -67,7 +67,7 @@ Then:
 # Deployment
 ## Servers (Linux)
 ```bash
-export VERSION="20250723-linux-3"
+export VERSION="20250822-02"
 export CONSUL_ENCRYPT="<replace>"
 export SERVER1="192.168.8.119"
 export SERVER2="192.168.8.120"
@@ -130,7 +130,7 @@ Look:
 
 ## Windows
 ```powershell
-$env:VERSION="20250723-3-win"
+$env:VERSION="20250822-02"
 $env:CONSUL_ENCRYPT="<replace>"
 $env:SERVER1="192.168.8.119"
 $env:SERVER2="192.168.8.120"

@@ -3,7 +3,8 @@ services:
     image: ghcr.io/olljanat/nomad-simplified:${VERSION}
     container_name: nomad${NOMAD_NODE_NUM}
     hostname: nomad${NOMAD_NODE_NUM}
-    command: nomad agent -server -config=/etc/nomad.d -config=/etc/nomad.d/role/server.hcl -bind=${NODE_IP} -region=${REGION} -dc=${DATACENTER}
+    entrypoint: /bin/server-entry.sh
+    command: nomad agent -server -config=/etc/nomad.d -config=/etc/nomad.d/role/server.hcl -region=${REGION} -dc=${DATACENTER}
     environment:
       NODE_IP: ${NODE_IP}
       SERVER1: ${SERVER1}
@@ -20,7 +21,7 @@ services:
       - CMD
       - /bin/sh
       - -c
-      - wget --no-check-certificate -O - -q "https://${NOMAD_NODE_IP}:4646/v1/agent/health" | grep -q '{"server":{"message":"ok","ok":true}}'
+      - wget -O - -q "http://127.0.0.1:4646/v1/agent/health" | grep -q '{"server":{"message":"ok","ok":true}}'
       interval: 5s
       timeout: 1s
       retries: 1

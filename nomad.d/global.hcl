@@ -2,6 +2,10 @@ acl {
   enabled = true
 }
 
+addresses {
+  http = "127.0.0.1"
+}
+
 client {
   options {
     "driver.allowlist" = "docker"
@@ -32,6 +36,7 @@ telemetry {
 }
 
 tls {
+  http = false
   rpc = true
   verify_https_client = false
   verify_server_hostname = true

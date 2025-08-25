@@ -22,5 +22,7 @@ COPY /nomad.d /etc/nomad.d
 # Remove Windows specific files
 RUN rm -f /etc/nomad.d/windows.hcl
 
-# Add client entry script
+# Add entry scripts
 COPY /client-entry.sh /bin/
+COPY /servers-entry.sh /bin/
+

@@ -1,4 +1,20 @@
 services:
+  # Nomad Admission Control Proxy
+  # https://github.com/mxab/nacp/
+  nacp:
+    image: ghcr.io/mxab/nacp:v0.8.0
+    # FixMe: Default user "10001" does not have access to TLS certs
+    user: root
+    container_name: nomad${NOMAD_NODE_NUM}-nacp
+    command: -config /etc/nacp/config.hcl
+    network_mode: host
+    restart: always
+    configs:
+    - source: nacp-config.hcl
+      target: /etc/nacp/config.hcl
+    volumes:
+    - ./tls:/opt/tls:ro
+
   nomad:
     image: ghcr.io/olljanat/nomad-simplified:${VERSION}
     container_name: nomad${NOMAD_NODE_NUM}
@@ -10,11 +26,12 @@ services:
       SERVER1: ${SERVER1}
       SERVER2: ${SERVER2}
       SERVER3: ${SERVER3}
-    network_mode: host
-    uts: host
     pid: host
     ipc: host
+    # FixMe: It might be possible to run Nomad servers without root permission
+    # https://github.com/hashicorp/nomad/issues/13669
     privileged: true
+    network_mode: host
     restart: always
     healthcheck:
       test:
@@ -48,11 +65,12 @@ services:
       SERVER2: ${SERVER2}
       SERVER3: ${SERVER3}
       DOMAIN: service.nomad
-    network_mode: host
-    uts: host
+      COREDNS_PREFER_CIDR: 10.0.0.0/8
     pid: host
     ipc: host
+    uts: host
     privileged: true
+    network_mode: host
     restart: always
     healthcheck:
       test:
@@ -69,6 +87,11 @@ services:
     # and give it 1 minute handle active connections before killing container
     stop_grace_period: 1m
     stop_signal: SIGINT
+
+configs:
+  nacp-config.hcl:
+    name: "nacp-config.hcl"
+    file: ./nacp-config.hcl
 
 volumes:
   nomad:

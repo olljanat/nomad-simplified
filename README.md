@@ -12,6 +12,12 @@ Design principals:
 * Service discovery with [CoreDNS plugin for Hashicorp Nomad](https://github.com/ituoga/coredns-nomad)
   * Minimize network latency by using `loadbalance` plugin with [prefer](https://github.com/coredns/coredns/pull/7433) option.
 * [Manual clustering](https://developer.hashicorp.com/nomad/docs/deploy/clusters/connect-nodes#manual-clustering)
+* Policy enforcement with [Nomad Admission Control Proxy](https://github.com/mxab/nacp)
+
+> [!TIP]
+> In these example configurations both Linux server and clients are running in Docker containers which [is not officially supported](https://developer.hashicorp.com/nomad/docs/deploy/production/requirements#running-nomad-in-docker)
+>
+> However, same configuration files can be used with with non-containerized installations too.
 
 # Preparation
 ## TLS

@@ -19,16 +19,6 @@ consul {
 
 disable_update_check = true
 
-plugin "docker" {
-  config {
-    allow_privileged = false
-    extra_labels = ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
-    volumes {
-      enabled = false
-    }
-  }
-}
-
 telemetry {
   publish_allocation_metrics = true
   publish_node_metrics = true

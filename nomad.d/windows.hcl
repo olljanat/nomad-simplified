@@ -15,8 +15,9 @@ log_rotate_duration = "24h"
 log_rotate_max_files = 100
 
 plugin "docker" {
-
   config {
+    extra_labels = ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
+
     # Make garbage collector less agressive
     gc {
       container = false
@@ -30,7 +31,12 @@ plugin "docker" {
       # these images are big and slow to download again
       image = false
     }
+
     pull_activity_timeout = "15m"
+
+    volumes {
+      enabled = false
+    }
   }
 }
 

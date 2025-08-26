@@ -4,6 +4,9 @@ client {
 
 plugin "docker" {
   config {
+    allow_privileged = false
+    extra_labels = ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
+
     # Make garbage collector less agressive
     gc {
       container = false
@@ -14,6 +17,10 @@ plugin "docker" {
       }
       image = true
       image_delay = "24h"
+    }
+
+    volumes {
+      enabled = false
     }
   }
 }

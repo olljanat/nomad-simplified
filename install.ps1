@@ -17,11 +17,6 @@ New-Service -Name "nomad" `
   -BinaryPathName "c:\bin\nomad.exe agent -client -config c:\etc\nomad.d -region=$region -dc=$datacenter -node-pool=windows" `
   -StartupType Automatic
 
-# Make Nomad service depend on of Docker service
-## Please note that you need reboot server before this is effective.
-Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\nomad" `
-  -Name DependOnService -Type MultiString -Value @("docker")
-
 # Increase the non-interactive desktop heap size
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\SubSystems" -Name "SharedSection" -Value "1024,20480,768"
 

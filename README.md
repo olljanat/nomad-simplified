@@ -6,13 +6,15 @@ Design principals:
   * Completely avoid need of Consul.
   * Support only Docker tasks.
   * Avoid need of load balancers.
+* Secure by design:
+  * All workloads running in non-default namespaces which are isolated with ACLs and firewall rules.
+  * Policy enforcement with [Nomad Admission Control Proxy](https://github.com/mxab/nacp)
 * Unify between Linux and Windows as much as possible
 * Non-overlay networking with `ipvlan` (Linux) and `transparent` (Windows) Docker drivers.
   * IP management handled with [IPAM plugin for Docker with Nomad integration](/ipam-plugin)
 * Service discovery with [CoreDNS plugin for Hashicorp Nomad](https://github.com/ituoga/coredns-nomad)
   * Minimize network latency by using `loadbalance` plugin with [prefer](https://github.com/coredns/coredns/pull/7433) option.
 * [Manual clustering](https://developer.hashicorp.com/nomad/docs/deploy/clusters/connect-nodes#manual-clustering)
-* Policy enforcement with [Nomad Admission Control Proxy](https://github.com/mxab/nacp)
 
 > [!TIP]
 > In these example configurations both Linux server and clients are running in Docker containers which [is not officially supported](https://developer.hashicorp.com/nomad/docs/deploy/production/requirements#running-nomad-in-docker)

@@ -155,7 +155,7 @@ $env:HOSTNAME=$env:COMPUTERNAME.ToLower()
 # Networking
 In this setup we are using network configuration *without* any overlay technologies but instead of give each container network routable IP.
 
-**TODO** Add explation why...
+This is done because overlay networks introduces software bugs to network layer and have been seen unstable especially in Windows.
 
 ## Linux
 ```bash

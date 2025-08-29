@@ -4,7 +4,7 @@ client {
 
 plugin "docker" {
   config {
-    allow_privileged = false
+    allow_privileged = true
     extra_labels = ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
 
     # Make garbage collector less agressive

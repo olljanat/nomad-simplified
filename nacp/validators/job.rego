@@ -73,6 +73,13 @@ errors contains msg if {
 }
 
 errors contains msg if {
+	input.job.Namespace != "z-platform"
+	some i, j
+	input.job.TaskGroups[i].Tasks[j].Config.privileged == true
+	msg := sprintf("group[%d].task[%d].config privileged containers are not allowed", [i, j])
+}
+
+errors contains msg if {
 	some i, j
 	task := input.job.TaskGroups[i].Tasks[j]
 	task.Resources.Cores == 0

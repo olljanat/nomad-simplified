@@ -67,6 +67,7 @@ errors contains msg if {
 }
 
 errors contains msg if {
+	input.job.Namespace != "z-platform"
 	some i, j
 	input.job.TaskGroups[i].Tasks[j].Config.network_mode != "containers"
 	msg := sprintf("group[%d].task[%d].config network_mode must be 'containers'", [i, j])

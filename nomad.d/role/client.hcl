@@ -1,5 +1,9 @@
 client {
   enabled = true
+  host_volume "host-root" {
+    path      = "/"
+    read_only = false
+  }
 }
 
 plugin "docker" {

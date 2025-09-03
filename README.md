@@ -9,6 +9,8 @@ Design principals:
 * Secure by design:
   * All workloads running in non-default namespaces which are isolated with ACLs and firewall rules.
   * Policy enforcement with [Nomad Admission Control Proxy](https://github.com/mxab/nacp)
+  * Utilize namespace specific [Nomad Variables](https://developer.hashicorp.com/nomad/docs/concepts/variables) to provide secrets for containers without need to use HashiCorp Vault.
+  * Only `z-platform` namespace is allowed to run containers in privileged mode [which is needed by CSI plugins](https://github.com/hashicorp/nomad/issues/9258).
 * Unify between Linux and Windows as much as possible
 * Non-overlay networking with `ipvlan` (Linux) and `transparent` (Windows) Docker drivers.
   * IP management handled with [IPAM plugin for Docker with Nomad integration](/ipam-plugin)
@@ -16,13 +18,55 @@ Design principals:
   * Minimize network latency by using `loadbalance` plugin with [prefer](https://github.com/coredns/coredns/pull/7433) option.
 * [Manual clustering](https://developer.hashicorp.com/nomad/docs/deploy/clusters/connect-nodes#manual-clustering)
 
+Target architecture is same than on [Nomad single region reference architecture](https://developer.hashicorp.com/nomad/tutorials/enterprise/production-reference-architecture-vm-with-consul#one-region) with only expection that CoreDNS replaces Consul.
+
+
+# Project content
+## Nomad
+Nomad nodes in different roles are using following configuration files from `nomad.d` folder:
+| Role                 | Config files                               |
+| -------------------- | ------------------------------------------ |
+| Nomad server         | global.hcl + linux.hcl + role/server.hcl   |
+| Nomad Linux client   | global.hcl + linux.hcl + role/client.hcl   |
+| Nomad Windows client | global.hcl + windows.hcl + role/client.hcl |
+
 > [!TIP]
 > In these example configurations both Linux server and clients are running in Docker containers which [is not officially supported](https://developer.hashicorp.com/nomad/docs/deploy/production/requirements#running-nomad-in-docker)
 >
 > However, same configuration files can be used with with non-containerized installations too.
 
+## Nomad Admission Control Proxy
+Nomad servers are configured to listen HTTP API only from localhost. NACP is used to publish Nomad API over HTTPS.
+Reason for this is that NACP usage avoids certificate challenge explained in [here](https://github.com/hashicorp/nomad/issues/25020) and that NACP enforces [platform rules](nacp/validators/job.rego).
+
+## CoreDNS
+[Corefile](coredns/Corefile) defines DNS zone where Nomad services are registered and forwards all other requests to default DNS server configured to Nomad nodes.
+
+## IPAM plugin
+Folder `ipam-plugin` contains custom IPAM plugin build to handle IP access management in configuration.
+
+# Upstream contributions
+The way to keep this configuration as simple as possible is to contribute upstream open source projects.
+
+Following contributions have been investigated/implemented/proposed:
+* Nomad: [docker: validate namespace network mode limits](https://github.com/hashicorp/nomad/pull/26363)
+  * This was rejected by HashiCorp because it does not fit to their architecture so decision was made to use [Nomad Admission Control Proxy](https://github.com/mxab/nacp) instead of.
+* Docker: [windows: do not forgot IPAM configuration when re-creating networks](https://github.com/moby/moby/pull/50649)
+  * This was merged and will be included to next major version of Docker.
+* Docker: [libnetwork: provide endpoint name for IPAM drivers](https://github.com/moby/moby/pull/50586)
+  * Solution have been accepted by one libnetwork maintainer, waiting for second review.
+* OpenTelemetry Collector: [[receiver/dockerstatsreceiver] Add Windows support](https://github.com/open-telemetry/opentelemetry-collector-contrib/pull/42297)
+
+Additionally following bugs/feature requests have been reported:
+* Docker: [IPAM plugin loading is broken in Windows starting from Docker 27.0.1](https://github.com/moby/moby/issues/50596)
+* Nomad: [Support disabling of "Sign in with token" option from UI](https://github.com/hashicorp/nomad/issues/26333)
+* NACP: [Debug logging with type slog seems to be broken](https://github.com/mxab/nacp/issues/43)
+* NACP: [OPA handling is not compatible with Rego Playground](https://github.com/mxab/nacp/issues/44)
+
 # Preparation
 ## TLS
+For simplicity, this solution is using Nomad internal CA instead of Vault.
+
 As first step, you should generate [TLS certificates](https://developer.hashicorp.com/nomad/docs/secure/traffic/tls)
 ```bash
 export VERSION="20250822-02"

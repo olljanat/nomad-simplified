@@ -5,11 +5,11 @@ on:
     inputs:
       nomad_version:
         description: 'Nomad version ( https://releases.hashicorp.com/nomad/ )'
-        default: '1.10.4'
+        default: 'v1.10.6-dev'
         required: true
       coredns_nomad_version:
-        description: 'CoreDNS Nomad version ( https://github.com/ituoga/coredns-nomad/pkgs/container/coredns-nomad )'
-        default: '0.1.1'
+        description: 'CoreDNS version ( https://github.com/coredns/coredns/releases )'
+        default: '1.13.0'
         required: true
 
 jobs:

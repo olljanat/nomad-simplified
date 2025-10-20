@@ -4,14 +4,14 @@ set -euxo pipefail
 org=$1
 repo=$2
 nomad_version=$3
-coredns_nomad_version=$4
+coredns_version=$4
 version=$5
 
 # Build Docker images for Linux
 TAG="$org/$repo:$version"
 docker build . -t $TAG \
   --build-arg NOMAD_VERSION=$nomad_version \
-  --build-arg COREDNS_NOMAD_VERSION=$coredns_nomad_version
+  --build-arg COREDNS_VERSION=$coredns_version
 docker push $TAG
 
 # Build ZIP files for Windows

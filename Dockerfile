@@ -5,7 +5,9 @@ FROM coredns/coredns:${COREDNS_VERSION} AS coredns
 # Build target container
 FROM debian:bookworm-slim
 RUN apt-get update \
-    && apt-get install -y ca-certificates curl iproute2 iputils-ping net-tools traceroute unzip wget
+    && apt-get install -y ca-certificates curl iproute2 iptables iputils-ping net-tools traceroute unzip wget \
+    && update-alternatives --set iptables /usr/sbin/iptables-legacy \
+    && update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
 COPY --from=coredns /coredns /bin/
 RUN mkdir -p /etc/coredns
 COPY /coredns /etc/coredns

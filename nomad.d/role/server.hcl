@@ -6,6 +6,10 @@ client {
   enabled = false
 }
 
+limits {
+  http_max_conns_per_client = 0
+}
+
 server {
   enabled = true
   bootstrap_expect = 3

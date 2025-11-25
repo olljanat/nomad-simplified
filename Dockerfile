@@ -1,6 +1,7 @@
 # Add CoreDNS
 ARG COREDNS_VERSION=unknown
-FROM coredns/coredns:${COREDNS_VERSION} AS coredns
+# FROM coredns/coredns:${COREDNS_VERSION} AS coredns
+FROM ollijanatuinen/coredns:nomad-tags-filter AS coredns
 
 # Build target container
 FROM debian:bookworm-slim

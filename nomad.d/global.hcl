@@ -3,7 +3,7 @@ acl {
 }
 
 addresses {
-  http = "127.0.0.1"
+  http = "0.0.0.0"
 }
 
 client {

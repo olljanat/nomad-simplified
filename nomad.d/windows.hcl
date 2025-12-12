@@ -16,6 +16,7 @@ log_rotate_max_files = 100
 
 plugin "docker" {
   config {
+    disable_log_collection = true
     extra_labels = ["job_name", "task_group_name", "task_name", "namespace", "node_name"]
 
     # Make garbage collector less agressive
